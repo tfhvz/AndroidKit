@@ -1,10 +1,10 @@
-package com.snicesoft.basekit.util;
-
-import java.util.List;
+package com.snicesoft.framework;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+
+import java.util.List;
 
 public class FragmentUtil {
 	public static void openFragment(int id, Fragment fragment,

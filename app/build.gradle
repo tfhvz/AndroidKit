@@ -25,4 +25,5 @@ dependencies {
     compile project(':basekit')
     compile project(':bitmap')
     compile project(':viewbind')
+    compile project(':http.volley')
 }

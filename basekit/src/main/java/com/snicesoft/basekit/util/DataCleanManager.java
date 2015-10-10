@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 /**
  * @author zhu zhe
- * @Desc 主要功能有清除内/外缓存，清除数据库，清除sharedPreference，清除files和清除自定义目录
+ *  主要功能有清除内/外缓存，清除数据库，清除sharedPreference，清除files和清除自定义目录
  * @since 2015年3月5日 上午9:14:30
  * @version V1.0
  */

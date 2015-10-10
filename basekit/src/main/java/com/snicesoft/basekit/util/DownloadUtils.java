@@ -28,7 +28,7 @@ public class DownloadUtils {
 	 *            网络地址
 	 * @param subType
 	 *            子文件目录
-	 * @param ext
+	 * @param fileName
 	 *            文件后缀名
 	 */
 	public static void download(Context context, String httpFile,

@@ -22,8 +22,8 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.0.1'
-    compile project(':basekit')
-    compile project(':bitmap')
-    compile project(':viewbind')
-    compile project(':http.volley')
+//    compile project(':basekit')
+//    compile project(':bitmap')
+//    compile project(':viewbind')
+//    compile project(':http.volley')
 }

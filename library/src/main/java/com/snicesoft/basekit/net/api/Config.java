@@ -6,15 +6,19 @@ public abstract class Config {
         String HTTPS = "https://";
     }
 
-    public abstract String getScheme();
+    abstract String getScheme();
 
-    public abstract String getIP();
+    abstract String getIP();
 
-    public abstract String getApiBaseName();
+    abstract String getApiBaseName();
 
-    public abstract int getPort();
+    abstract int getPort();
 
     public final String baseUrl() {
         return APIUtils.getUrl(getScheme(), getIP(), getPort(), getApiBaseName());
+    }
+
+    public final String schemeUrl() {
+        return APIUtils.getUrl(getScheme(), getIP(), getPort());
     }
 }

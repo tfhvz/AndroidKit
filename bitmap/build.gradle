@@ -29,7 +29,7 @@ dependencies {
 
 //def siteUrl = 'https://github.com/snice/AndroidKit'      // 项目的主页
 //def gitUrl = 'https://github.com/snice/AndroidKit.git'   // Git仓库的url
-//group = "com.snicesoft"
+//group = "com.snicesoft.androidkit"
 //install {
 //    repositories.mavenInstaller {
 //        // This generates POM.xml with proper parameters

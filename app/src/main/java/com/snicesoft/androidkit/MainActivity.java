@@ -5,7 +5,7 @@ import android.os.Bundle;
 import com.snicesoft.basekit.LogKit;
 import com.snicesoft.framework.AKActivity;
 import com.snicesoft.net.api.API;
-import com.snicesoft.android.R;
+import com.snicesoft.androidkit.android.R;
 
 import com.snicesoft.viewbind.annotation.Layout;
 

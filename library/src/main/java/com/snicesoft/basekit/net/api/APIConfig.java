@@ -18,14 +18,14 @@ public class APIConfig {
         Product.apiBaseName = apiBaseName;
     }
 
-    public static class Test {
+    static class Test {
         public static String scheme = Config.Scheme.HTTP;
         public static String ip = "0.0.0.0";
         public static String apiBaseName = "";
         public static int port = 0;
     }
 
-    public static class Product {
+    static class Product {
         public static String scheme = Config.Scheme.HTTP;
         public static String ip = "0.0.0.0";
         public static String apiBaseName = "";

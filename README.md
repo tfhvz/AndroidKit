@@ -1,10 +1,10 @@
 # AndroidKit
 我的android studio项目
-# 快速使用
-## gradle添加
+## 快速使用
+### gradle添加
 compile 'com.snicesoft:library:1.0.0'
-## Application
-```
+### Application
+```java
 public class KitApplication extends Application {
     @Override
     public void onCreate() {
@@ -33,10 +33,10 @@ public class KitApplication extends Application {
     }
 }
 ```
-## net网络请求数据package
-### ....net.api
+### net网络请求数据package
+#### ....net.api
 API.java
-```
+```java
 public final class API {
     private static Config config;
 
@@ -55,14 +55,14 @@ public final class API {
     }
 }
 ```
-### ....net.data
+#### ....net.data
 存放接口数据模型
-### ....net.controller
+#### ....net.controller
 接口请求Controller
-# 包含
-## 网络请求
+## 包含
+### 网络请求
 可以兼容Volley、OkHttp等网络请求库
-## 图片加载
+### 图片加载
 可以兼容xUtils、ImageLoder等图片加载库
 ##开源协议
 ```

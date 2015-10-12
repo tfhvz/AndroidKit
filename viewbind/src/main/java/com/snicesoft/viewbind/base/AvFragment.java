@@ -63,6 +63,9 @@ public class AvFragment<H extends IHolder, D, FA extends FragmentActivity> exten
 		return null;
 	}
 
+    public void onRefresh(){
+
+    }
 	@Override
 	public void onClick(View view) {
 		

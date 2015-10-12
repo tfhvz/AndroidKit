@@ -4,11 +4,14 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
+import com.snicesoft.viewbind.base.AvAppCompatActivity;
 import com.snicesoft.viewbind.base.AvFragment;
-import com.snicesoft.viewbind.base.AvFragmentActivity;
 import com.snicesoft.viewbind.rule.IHolder;
 
-public class BaseFragmentActivity<H extends IHolder, D> extends AvFragmentActivity<H, D> {
+/**
+ * Created by zhuzhe on 15/10/12.
+ */
+public class AKActivity<H extends IHolder, D> extends AvAppCompatActivity<H, D> {
     protected AvFragment<?, ?, ?> curFragment;
 
     public void openFragment(int id, AvFragment<?, ?, ?> targetFragment) {
@@ -31,9 +34,9 @@ public class BaseFragmentActivity<H extends IHolder, D> extends AvFragmentActivi
         transaction.commit();
     }
 
-    public void replaceFragment(int id, AvFragment<?, ?, ?> fragment, boolean backStack) {
-        FragmentUtil.replaceFragment(id, fragment, getSupportFragmentManager(), backStack);
-        curFragment = fragment;
+    public void replaceFragment(int id, AvFragment<?, ?, ?> targetFragment, boolean backStack) {
+        FragmentUtil.replaceFragment(id, targetFragment, getSupportFragmentManager(), backStack);
+        curFragment = targetFragment;
     }
 
     /**

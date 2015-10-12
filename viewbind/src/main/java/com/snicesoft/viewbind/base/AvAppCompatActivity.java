@@ -1,19 +1,27 @@
 package com.snicesoft.viewbind.base;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 
 import com.snicesoft.viewbind.AVKit;
 import com.snicesoft.viewbind.ViewFinder;
+import com.snicesoft.viewbind.pluginmgr.Proxy;
 import com.snicesoft.viewbind.rule.IHolder;
 
-@SuppressWarnings({ "unchecked", "rawtypes" })
-public class AvFragment<H extends IHolder, D, FA extends FragmentActivity> extends Fragment
-		implements IAv<H, D>, View.OnClickListener {
+/**
+ * FragmentActivity基类
+ * 
+ * @author zhe
+ *
+ * @param <H>
+ * @param <D>
+ */
+@SuppressWarnings("rawtypes")
+@SuppressLint("NewApi")
+public class AvAppCompatActivity<H extends IHolder, D> extends FragmentActivity implements IAv<H, D>, OnClickListener {
 	private ViewFinder finder;
 	protected D _data;
 	protected H _holder;
@@ -38,19 +46,23 @@ public class AvFragment<H extends IHolder, D, FA extends FragmentActivity> exten
 		AVKit.dataBindTo(_data, finder, fieldName);
 	}
 
-	public final FA fa() {
-		return (FA) getActivity();
-	}
-
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View root = inflater.inflate(LayoutUtils.getLayoutId(getClass()), null);
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(LayoutUtils.getLayoutId(getThisClass()));
 		_holder = newHolder();
 		_data = newData();
-		finder = new ViewFinder(root);
+		finder = new ViewFinder(this);
 		AVKit.initHolder(_holder, finder);
 		dataBindAll();
-		return root;
+	}
+
+	public Class<?> getThisClass() {
+		Class<?> clazz = getClass();
+		if (Proxy.PROXY_ACTIVITY.equals(clazz.getName())) {
+			clazz = getClass().getSuperclass();
+		}
+		return clazz;
 	}
 
 	@Override
@@ -63,11 +75,9 @@ public class AvFragment<H extends IHolder, D, FA extends FragmentActivity> exten
 		return null;
 	}
 
-    public void onRefresh(){
-
-    }
 	@Override
-	public void onClick(View view) {
-		
+	public void onClick(View v) {
+		if (v == null)
+			return;
 	}
 }

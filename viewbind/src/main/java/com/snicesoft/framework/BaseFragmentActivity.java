@@ -1,6 +1,7 @@
 package com.snicesoft.framework;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 import com.snicesoft.viewbind.base.AvFragment;
@@ -10,11 +11,24 @@ import com.snicesoft.viewbind.rule.IHolder;
 public class BaseFragmentActivity<H extends IHolder, D> extends AvFragmentActivity<H, D> {
     protected AvFragment<?, ?, ?> curFragment;
 
-    public void openFragment(int id, AvFragment<?, ?, ?> fragment) {
-        if (curFragment != null && curFragment == fragment)
+    public void openFragment(int id, AvFragment<?, ?, ?> targetFragment) {
+        if (curFragment != null && curFragment == targetFragment)
             return;
-        FragmentUtil.openFragment(id, fragment, getSupportFragmentManager());
-        curFragment = fragment;
+        FragmentTransaction transaction = getSupportFragmentManager()
+                .beginTransaction();
+        if (!targetFragment.isAdded()) {
+            transaction.add(id, targetFragment, targetFragment.getClass()
+                    .getName());
+        }
+        if (targetFragment.isHidden()) {
+            transaction.show(targetFragment);
+            targetFragment.onRefresh();
+        }
+        if (curFragment != null && curFragment.isVisible()) {
+            transaction.hide(curFragment);
+        }
+        curFragment = targetFragment;
+        transaction.commit();
     }
 
     public void replaceFragment(int id, AvFragment<?, ?, ?> fragment, boolean backStack) {

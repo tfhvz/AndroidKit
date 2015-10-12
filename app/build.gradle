@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.0"
 
     defaultConfig {
-        applicationId "com.snicesoft.androidkit"
+        applicationId "com.snicesoft.android"
         minSdkVersion 10
         targetSdkVersion 23
         versionCode 1
@@ -22,7 +22,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.0.1'
-    compile project(':library')
+    compile project(':androidkit')
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.squareup.okio:okio:1.6.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'

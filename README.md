@@ -1,6 +1,6 @@
 # AndroidKit
 我的android studio项目
-## 快速使用
+## 【1】快速使用
 ### gradle添加
 compile 'com.snicesoft:library:1.0.0'
 ### Application
@@ -59,12 +59,12 @@ public final class API {
 存放接口数据模型
 #### ....net.controller
 接口请求Controller
-## 包含
+## 【2】包含
 ### 网络请求
 可以兼容Volley、OkHttp等网络请求库
 ### 图片加载
 可以兼容xUtils、ImageLoder等图片加载库
-##开源协议
+## 【3】开源协议
 ```
  Copyright (C) 2015, zhuzhe
  

@@ -91,7 +91,9 @@ public class VolleyHttpKit extends HttpKit {
         final ErrorListener errorListener = new ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (callBack != null) {
+                if (error == null) {
+                    callBack.onError(new HttpError("400"));
+                } else {
                     callBack.onError(new HttpError(error.getMessage()));
                 }
             }
@@ -117,7 +119,7 @@ public class VolleyHttpKit extends HttpKit {
     }
 
     @Override
-    public void postJSON(HttpRequest request, final HttpCallBack callBack) {
+    public void postJSON(final HttpRequest request, final HttpCallBack callBack) {
         final Listener<String> listener = new Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -134,7 +136,9 @@ public class VolleyHttpKit extends HttpKit {
         final ErrorListener errorListener = new ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (callBack != null) {
+                if (error == null) {
+                    callBack.onError(new HttpError("400"));
+                } else {
                     callBack.onError(new HttpError(error.getMessage()));
                 }
             }
@@ -154,7 +158,7 @@ public class VolleyHttpKit extends HttpKit {
 
             @Override
             public Map<String, String> getHeaders() {
-                HashMap<String, String> headers = new HashMap<String, String>();
+                Map<String, String> headers = request.getHeaders();
                 headers.put("Accept", "application/json");
                 headers.put("Content-Type", "application/json; charset=UTF-8");
                 return headers;
@@ -191,7 +195,11 @@ public class VolleyHttpKit extends HttpKit {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (callBack != null) {
-                    callBack.onError(new HttpError(error.getMessage()));
+                    if (error == null) {
+                        callBack.onError(new HttpError("400"));
+                    } else {
+                        callBack.onError(new HttpError(error.getMessage()));
+                    }
                 }
             }
         };
@@ -202,6 +210,15 @@ public class VolleyHttpKit extends HttpKit {
                     return request.getParams();
                 }
                 return super.getParams();
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                if (request.getHeaders().isEmpty()) {
+                    return super.getHeaders();
+                } else {
+                    return request.getHeaders();
+                }
             }
         };
         requestMap.put(request, volleyRequest);

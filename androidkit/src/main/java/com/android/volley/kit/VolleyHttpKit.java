@@ -91,10 +91,20 @@ public class VolleyHttpKit extends HttpKit {
         final ErrorListener errorListener = new ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (error == null) {
-                    callBack.onError(new HttpError("400"));
-                } else {
-                    callBack.onError(new HttpError(error.getMessage()));
+                if (callBack != null) {
+                    if (error == null) {
+                        callBack.onError(null);
+                    } else {
+                        callBack.onError(new HttpError(error.getMessage()));
+                    }
+                }
+            }
+        };
+        final PostUploadRequest.LoadListener loadListener = new PostUploadRequest.LoadListener() {
+            @Override
+            public void onLoading(long count, long current) {
+                if (callBack != null) {
+                    callBack.onLoading(count, current);
                 }
             }
         };
@@ -114,6 +124,7 @@ public class VolleyHttpKit extends HttpKit {
                 return request.getHeaders();
             }
         };
+        volleyRequest.setLoadListener(loadListener);
         requestMap.put(request, volleyRequest);
         volleyQueue.add(volleyRequest);
     }
@@ -137,7 +148,7 @@ public class VolleyHttpKit extends HttpKit {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (error == null) {
-                    callBack.onError(new HttpError("400"));
+                    callBack.onError(null);
                 } else {
                     callBack.onError(new HttpError(error.getMessage()));
                 }
@@ -196,7 +207,7 @@ public class VolleyHttpKit extends HttpKit {
             public void onErrorResponse(VolleyError error) {
                 if (callBack != null) {
                     if (error == null) {
-                        callBack.onError(new HttpError("400"));
+                        callBack.onError(null);
                     } else {
                         callBack.onError(new HttpError(error.getMessage()));
                     }

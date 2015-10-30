@@ -53,6 +53,42 @@ public class VolleyHttpKit extends HttpKit {
         return instance;
     }
 
+    private Listener<String> getListener(final HttpCallBack callBack) {
+        return new Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (callBack != null) {
+                    if (callBack.mType == String.class) {
+                        callBack.onSuccess(response);
+                    } else {
+                        try {
+                            Object o = mGson.fromJson(response, callBack.mType);
+                            callBack.onSuccess(o);
+                        } catch (Exception e) {
+                            callBack.onError(new HttpError("GSON 匹配错误."));
+                        }
+
+                    }
+                }
+            }
+        };
+    }
+
+    private ErrorListener getErrorListener(final HttpCallBack callBack) {
+        return new ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (callBack != null) {
+                    if (error == null) {
+                        callBack.onError(null);
+                    } else {
+                        callBack.onError(new HttpError(error.getMessage()));
+                    }
+                }
+            }
+        };
+    }
+
     @Override
     public void get(HttpRequest request, HttpCallBack callBack) {
         send(Request.Method.GET, request, callBack);
@@ -75,31 +111,7 @@ public class VolleyHttpKit extends HttpKit {
 
     @Override
     public void postFile(final HttpRequest request, final HttpCallBack callBack) {
-        final Listener<String> listener = new Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                if (callBack != null) {
-                    if (callBack.mType == String.class) {
-                        callBack.onSuccess(response);
-                    } else {
-                        Object o = mGson.fromJson(response, callBack.mType);
-                        callBack.onSuccess(o);
-                    }
-                }
-            }
-        };
-        final ErrorListener errorListener = new ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if (callBack != null) {
-                    if (error == null) {
-                        callBack.onError(null);
-                    } else {
-                        callBack.onError(new HttpError(error.getMessage()));
-                    }
-                }
-            }
-        };
+
         final PostUploadRequest.LoadListener loadListener = new PostUploadRequest.LoadListener() {
             @Override
             public void onLoading(long count, long current) {
@@ -108,7 +120,7 @@ public class VolleyHttpKit extends HttpKit {
                 }
             }
         };
-        PostUploadRequest volleyRequest = new PostUploadRequest(request.getUrl(), listener, errorListener) {
+        PostUploadRequest volleyRequest = new PostUploadRequest(request.getUrl(), getListener(callBack), getErrorListener(callBack)) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 return request.getParams();
@@ -131,31 +143,8 @@ public class VolleyHttpKit extends HttpKit {
 
     @Override
     public void postJSON(final HttpRequest request, final HttpCallBack callBack) {
-        final Listener<String> listener = new Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                if (callBack != null) {
-                    if (callBack.mType == String.class) {
-                        callBack.onSuccess(response);
-                    } else {
-                        Object o = mGson.fromJson(response, callBack.mType);
-                        callBack.onSuccess(o);
-                    }
-                }
-            }
-        };
-        final ErrorListener errorListener = new ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if (error == null) {
-                    callBack.onError(null);
-                } else {
-                    callBack.onError(new HttpError(error.getMessage()));
-                }
-            }
-        };
         JsonRequest<String> volleyRequest = new JsonRequest<String>(Request.Method.POST, request.getUrl(),
-                request.getJson(), listener, errorListener) {
+                request.getJson(), getListener(callBack), getErrorListener(callBack)) {
 
             @Override
             protected Response<String> parseNetworkResponse(NetworkResponse response) {
@@ -189,32 +178,7 @@ public class VolleyHttpKit extends HttpKit {
         if (method == Request.Method.GET || method == Request.Method.DELETE) {
             request.setFullUrl();
         }
-        final Listener<String> listener = new Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                if (callBack != null) {
-                    if (callBack.mType == String.class) {
-                        callBack.onSuccess(response);
-                    } else {
-                        Object o = mGson.fromJson(response, callBack.mType);
-                        callBack.onSuccess(o);
-                    }
-                }
-            }
-        };
-        final ErrorListener errorListener = new ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if (callBack != null) {
-                    if (error == null) {
-                        callBack.onError(null);
-                    } else {
-                        callBack.onError(new HttpError(error.getMessage()));
-                    }
-                }
-            }
-        };
-        StringRequest volleyRequest = new StringRequest(method, request.getUrl(), listener, errorListener) {
+        StringRequest volleyRequest = new StringRequest(method, request.getUrl(), getListener(callBack), getErrorListener(callBack)) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 if (method == Method.POST || method == Method.PUT) {

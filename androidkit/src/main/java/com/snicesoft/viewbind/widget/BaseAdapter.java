@@ -95,7 +95,6 @@ abstract class BaseAdapter<H extends IHolder, D> extends android.widget.BaseAdap
             holder = newHolder();
             convertView = newView(position);
             if (holder != null) {
-                holder.setTag(data);
                 holder.setParent(convertView);
                 AVKit.initHolder(holder, new ViewFinder(convertView));
                 convertView.setTag(holder);
@@ -103,12 +102,16 @@ abstract class BaseAdapter<H extends IHolder, D> extends android.widget.BaseAdap
         } else {
             holder = (H) convertView.getTag();
         }
+
         if (data != null) {
             AVKit.dataBind(data, new ViewFinder(convertView));
         }
         if (holder != null) {
+            holder.setTag(data);
             holder.setPosition(position);
-            holder.initViewParams();
+            if (holder.getPosition() != -1) {
+                holder.initViewParams();
+            }
         }
         return convertView;
     }

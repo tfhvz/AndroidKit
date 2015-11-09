@@ -90,7 +90,7 @@ public abstract class RecyclerBaseAdapter<VH extends RecyclerHolder, D> extends 
         if (data != null) {
             AVKit.dataBind(data, new ViewFinder(holder.itemView));
         }
-        bindHolder(holder, data);
+        bindHolder(holder, data, position);
     }
 
     @Override
@@ -103,7 +103,7 @@ public abstract class RecyclerBaseAdapter<VH extends RecyclerHolder, D> extends 
         return dataList == null ? 0 : dataList.size();
     }
 
-    public abstract void bindHolder(VH holder, D data);
+    public abstract void bindHolder(VH holder, D data, int position);
 
     public abstract VH newHolder(View view);
 }

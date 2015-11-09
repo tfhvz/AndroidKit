@@ -6,6 +6,8 @@ import com.snicesoft.basekit.http.HttpRequest;
 
 @SuppressWarnings("rawtypes")
 interface IHttpKit {
+    public void setShouldCache(boolean shouldCache);
+
     public void get(HttpRequest request, HttpCallBack callBack);
 
     public void post(HttpRequest request, HttpCallBack callBack);

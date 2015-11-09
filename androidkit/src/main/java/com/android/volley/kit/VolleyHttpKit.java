@@ -39,6 +39,7 @@ public class VolleyHttpKit extends HttpKit {
     private Map<HttpRequest, Request> requestMap;
     private RequestQueue volleyQueue;
     private Gson mGson;
+    private boolean shouldCache = true;
 
     private VolleyHttpKit(Context context) {
         volleyQueue = Volley.newRequestQueue(context);
@@ -90,6 +91,11 @@ public class VolleyHttpKit extends HttpKit {
     }
 
     @Override
+    public void setShouldCache(boolean shouldCache) {
+        this.shouldCache = shouldCache;
+    }
+
+    @Override
     public void get(HttpRequest request, HttpCallBack callBack) {
         send(Request.Method.GET, request, callBack);
     }
@@ -136,6 +142,7 @@ public class VolleyHttpKit extends HttpKit {
                 return request.getHeaders();
             }
         };
+        volleyRequest.setShouldCache(shouldCache);
         volleyRequest.setLoadListener(loadListener);
         requestMap.put(request, volleyRequest);
         volleyQueue.add(volleyRequest);
@@ -164,6 +171,7 @@ public class VolleyHttpKit extends HttpKit {
                 return headers;
             }
         };
+        volleyRequest.setShouldCache(shouldCache);
         requestMap.put(request, volleyRequest);
         volleyQueue.add(volleyRequest);
     }
@@ -196,6 +204,7 @@ public class VolleyHttpKit extends HttpKit {
                 }
             }
         };
+        volleyRequest.setShouldCache(shouldCache);
         requestMap.put(request, volleyRequest);
         volleyQueue.add(volleyRequest);
     }

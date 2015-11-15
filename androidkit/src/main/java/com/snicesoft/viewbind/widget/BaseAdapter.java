@@ -4,10 +4,13 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.internal.$Gson$Types;
 import com.snicesoft.viewbind.AVKit;
 import com.snicesoft.viewbind.ViewFinder;
 import com.snicesoft.viewbind.rule.IHolder;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -123,12 +126,26 @@ abstract class BaseAdapter<H extends IHolder, D> extends android.widget.BaseAdap
         return 0;
     }
 
-    /**
-     * 创建Holder
-     *
-     * @return
-     */
-    public H newHolder() {
+    H newHolder() {
+        Class hClass = $Gson$Types.getRawType(getType(0));
+        try {
+            if (hClass == Void.class)
+                return null;
+            return (H) hClass.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
         return null;
+    }
+
+    Type getType(int index) {
+        Type superclass = getClass().getGenericSuperclass();
+        if (superclass instanceof Class) {
+            throw new RuntimeException("Missing type parameter.");
+        }
+        ParameterizedType parameterized = (ParameterizedType) superclass;
+        return $Gson$Types.canonicalize(parameterized.getActualTypeArguments()[index]);
     }
 }

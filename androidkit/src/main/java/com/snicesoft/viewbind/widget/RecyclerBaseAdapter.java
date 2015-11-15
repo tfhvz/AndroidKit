@@ -4,11 +4,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.internal.$Gson$Types;
 import com.snicesoft.viewbind.AVKit;
 import com.snicesoft.viewbind.ViewFinder;
 import com.snicesoft.viewbind.annotation.Layout;
 import com.snicesoft.viewbind.rule.RecyclerHolder;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -105,5 +110,32 @@ public abstract class RecyclerBaseAdapter<VH extends RecyclerHolder, D> extends 
 
     public abstract void bindHolder(VH holder, D data, int position);
 
-    public abstract VH newHolder(View view);
+    VH newHolder(View view) {
+        Class vClass = $Gson$Types.getRawType(getType(0));
+        if (vClass == Void.class)
+            return null;
+        try {
+            Constructor constructor = vClass.getConstructor(View.class);
+            return (VH) constructor.newInstance(view);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
+    Type getType(int index) {
+        Type superclass = getClass().getGenericSuperclass();
+        if (superclass instanceof Class) {
+            throw new RuntimeException("Missing type parameter.");
+        }
+        ParameterizedType parameterized = (ParameterizedType) superclass;
+        return $Gson$Types.canonicalize(parameterized.getActualTypeArguments()[index]);
+    }
 }

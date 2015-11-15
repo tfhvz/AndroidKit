@@ -50,6 +50,11 @@ public class OkhttpKit extends HttpKit {
     }
 
     @Override
+    public void setShouldCache(boolean shouldCache) {
+
+    }
+
+    @Override
     public void get(HttpRequest request, HttpCallBack callBack) {
         request.setFullUrl();
         Request ok = new Request.Builder().url(request.getUrl()).build();

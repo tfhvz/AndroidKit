@@ -5,16 +5,16 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 import com.snicesoft.viewbind.base.AvAppCompatActivity;
-import com.snicesoft.viewbind.base.AvFragment;
+import com.snicesoft.viewbind.base.AVFragment;
 import com.snicesoft.viewbind.rule.IHolder;
 
 /**
  * Created by zhuzhe on 15/10/12.
  */
 public class AKActivity<H extends IHolder, D> extends AvAppCompatActivity<H, D> {
-    protected AvFragment<?, ?, ?> curFragment;
+    protected AVFragment<?, ?, ?> curFragment;
 
-    public void openFragment(int id, AvFragment<?, ?, ?> targetFragment) {
+    public void openFragment(int id, AVFragment<?, ?, ?> targetFragment) {
         if (curFragment != null && curFragment == targetFragment)
             return;
         FragmentTransaction transaction = getSupportFragmentManager()
@@ -34,7 +34,7 @@ public class AKActivity<H extends IHolder, D> extends AvAppCompatActivity<H, D> 
         transaction.commit();
     }
 
-    public void replaceFragment(int id, AvFragment<?, ?, ?> targetFragment, boolean backStack) {
+    public void replaceFragment(int id, AVFragment<?, ?, ?> targetFragment, boolean backStack) {
         FragmentUtil.replaceFragment(id, targetFragment, getSupportFragmentManager(), backStack);
         curFragment = targetFragment;
     }

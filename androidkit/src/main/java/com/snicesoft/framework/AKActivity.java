@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
-import com.snicesoft.viewbind.base.AvAppCompatActivity;
 import com.snicesoft.viewbind.base.AVFragment;
+import com.snicesoft.viewbind.base.AvAppCompatActivity;
 import com.snicesoft.viewbind.rule.IHolder;
 
 /**
@@ -25,7 +25,6 @@ public class AKActivity<H extends IHolder, D> extends AvAppCompatActivity<H, D> 
         }
         if (targetFragment.isHidden()) {
             transaction.show(targetFragment);
-            targetFragment.onRefresh();
         }
         if (curFragment != null && curFragment.isVisible()) {
             transaction.hide(curFragment);

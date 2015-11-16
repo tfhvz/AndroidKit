@@ -64,7 +64,7 @@ public class AVFragment<H extends IHolder, D, FA extends FragmentActivity> exten
     H newHolder() {
         Class hClass = $Gson$Types.getRawType(getType(0));
         try {
-            if (hClass == Void.class)
+            if (hClass == IHolder.class)
                 return null;
             return (H) hClass.newInstance();
         } catch (java.lang.InstantiationException e) {

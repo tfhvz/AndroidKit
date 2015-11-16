@@ -9,8 +9,6 @@ import android.view.View.OnClickListener;
 import com.google.gson.internal.$Gson$Types;
 import com.snicesoft.viewbind.AVKit;
 import com.snicesoft.viewbind.ViewFinder;
-import com.snicesoft.viewbind.base.IAv;
-import com.snicesoft.viewbind.base.LayoutUtils;
 import com.snicesoft.viewbind.pluginmgr.Proxy;
 import com.snicesoft.viewbind.rule.IHolder;
 
@@ -77,7 +75,7 @@ public class AvAppCompatActivity<H extends IHolder, D> extends AppCompatActivity
     H newHolder() {
         Class hClass = $Gson$Types.getRawType(getType(0));
         try {
-            if (hClass == Void.class)
+            if (hClass == IHolder.class)
                 return null;
             return (H) hClass.newInstance();
         } catch (InstantiationException e) {

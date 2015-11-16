@@ -71,7 +71,7 @@ public class AVActivity<H extends IHolder, D> extends Activity implements IAv<H,
     H newHolder() {
         Class hClass = $Gson$Types.getRawType(getType(0));
         try {
-            if (hClass == Void.class)
+            if (hClass == IHolder.class)
                 return null;
             return (H) hClass.newInstance();
         } catch (InstantiationException e) {

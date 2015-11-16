@@ -112,7 +112,7 @@ public abstract class RecyclerBaseAdapter<VH extends RecyclerHolder, D> extends 
 
     VH newHolder(View view) {
         Class vClass = $Gson$Types.getRawType(getType(0));
-        if (vClass == Void.class)
+        if (vClass == RecyclerHolder.class)
             return null;
         try {
             Constructor constructor = vClass.getConstructor(View.class);

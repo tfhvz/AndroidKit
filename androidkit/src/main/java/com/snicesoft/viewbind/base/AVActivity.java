@@ -20,7 +20,7 @@ import java.lang.reflect.Type;
  * @author zhe
  */
 @SuppressWarnings("rawtypes")
-public class AvActivity<H extends IHolder, D> extends Activity implements IAv<H, D>, OnClickListener {
+public class AVActivity<H extends IHolder, D> extends Activity implements IAv<H, D>, OnClickListener {
     private ViewFinder finder;
     protected D _data;
     protected H _holder;

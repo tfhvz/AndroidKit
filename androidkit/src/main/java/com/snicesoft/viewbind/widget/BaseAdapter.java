@@ -9,6 +9,7 @@ import com.snicesoft.viewbind.AVKit;
 import com.snicesoft.viewbind.ViewFinder;
 import com.snicesoft.viewbind.rule.IHolder;
 
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -95,7 +96,11 @@ abstract class BaseAdapter<H extends IHolder, D> extends android.widget.BaseAdap
         D data = getItem(position);
         H holder = null;
         if (convertView == null) {
-            holder = newHolder();
+            try {
+                holder = newHolder();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             convertView = newView(position);
             if (holder != null) {
                 holder.setParent(convertView);
@@ -126,18 +131,16 @@ abstract class BaseAdapter<H extends IHolder, D> extends android.widget.BaseAdap
         return 0;
     }
 
-    H newHolder() {
+    H newHolder() throws Exception {
         Class hClass = $Gson$Types.getRawType(getType(0));
-        try {
-            if (hClass == IHolder.class)
-                return null;
-            return (H) hClass.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        if (hClass == IHolder.class)
+            return null;
+        if (hClass.getName().contains(getClass().getName() + "$")) {
+            if (Modifier.isStatic(hClass.getModifiers()))
+                return (H) hClass.newInstance();
+            return (H) hClass.getConstructors()[0].newInstance(this);
         }
-        return null;
+        return (H) hClass.newInstance();
     }
 
     Type getType(int index) {

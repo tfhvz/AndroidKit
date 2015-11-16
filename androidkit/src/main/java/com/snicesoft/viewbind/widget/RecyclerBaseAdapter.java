@@ -10,8 +10,7 @@ import com.snicesoft.viewbind.ViewFinder;
 import com.snicesoft.viewbind.annotation.Layout;
 import com.snicesoft.viewbind.rule.RecyclerHolder;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -81,7 +80,12 @@ public abstract class RecyclerBaseAdapter<VH extends RecyclerHolder, D> extends 
     @Override
     public final VH onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = View.inflate(parent.getContext(), resource, null);
-        return newHolder(view);
+        try {
+            return newHolder(view);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public final D getItem(int position) {
@@ -110,23 +114,16 @@ public abstract class RecyclerBaseAdapter<VH extends RecyclerHolder, D> extends 
 
     public abstract void bindHolder(VH holder, D data, int position);
 
-    VH newHolder(View view) {
+    VH newHolder(View view) throws Exception {
         Class vClass = $Gson$Types.getRawType(getType(0));
         if (vClass == RecyclerHolder.class)
             return null;
-        try {
-            Constructor constructor = vClass.getConstructor(View.class);
-            return (VH) constructor.newInstance(view);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return null;
+        if (vClass.getName().contains(getClass().getName() + "$")) {
+            if (Modifier.isStatic(vClass.getModifiers()))
+                return (VH) vClass.newInstance();
+            return (VH) vClass.getConstructors()[0].newInstance(this, view);
+        } else
+            return (VH) vClass.getConstructors()[0].newInstance(view);
 
     }
 

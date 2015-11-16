@@ -11,6 +11,7 @@ import com.snicesoft.viewbind.ViewFinder;
 import com.snicesoft.viewbind.pluginmgr.Proxy;
 import com.snicesoft.viewbind.rule.IHolder;
 
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
@@ -39,8 +40,12 @@ public class AVActivity<H extends IHolder, D> extends Activity implements IAv<H,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(LayoutUtils.getLayoutId(getThisClass()));
-        _holder = newHolder();
-        _data = newData();
+        try {
+            _holder = newHolder();
+            _data = newData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         finder = new ViewFinder(this);
         AVKit.initHolder(_holder, finder);
         dataBindAll();
@@ -54,32 +59,28 @@ public class AVActivity<H extends IHolder, D> extends Activity implements IAv<H,
         return clazz;
     }
 
-    D newData() {
+    D newData() throws Exception {
         Class dClass = $Gson$Types.getRawType(getType(1));
         if (dClass == Void.class)
             return null;
-        try {
-            return (D) dClass.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        if (dClass.getName().contains(getThisClass().getName() + "$")) {
+            if (Modifier.isStatic(dClass.getModifiers()))
+                return (D) dClass.newInstance();
+            return (D) dClass.getConstructors()[0].newInstance(this);
         }
-        return null;
+        return (D) dClass.newInstance();
     }
 
-    H newHolder() {
+    H newHolder() throws Exception {
         Class hClass = $Gson$Types.getRawType(getType(0));
-        try {
-            if (hClass == IHolder.class)
-                return null;
-            return (H) hClass.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        if (hClass == IHolder.class)
+            return null;
+        if (hClass.getName().contains(getThisClass().getName() + "$")) {
+            if (Modifier.isStatic(hClass.getModifiers()))
+                return (H) hClass.newInstance();
+            return (H) hClass.getConstructors()[0].newInstance(this);
         }
-        return null;
+        return (H) hClass.newInstance();
     }
 
     Type getType(int index) {

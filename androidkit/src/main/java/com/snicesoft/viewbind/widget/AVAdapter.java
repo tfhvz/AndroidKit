@@ -12,9 +12,9 @@ import com.snicesoft.viewbind.rule.IHolder;
  * @version V1.0
  */
 @SuppressWarnings("rawtypes")
-public abstract class AvAdapter<H extends IHolder, D> extends BaseAdapter<H, D> {
+public abstract class AVAdapter<H extends IHolder, D> extends BaseAdapter<H, D> {
 
-	public AvAdapter(Context context) {
+	public AVAdapter(Context context) {
 		super(context);
 		Layout layout = getClass().getAnnotation(Layout.class);
 		if (layout != null && layout.value() != 0) {
@@ -22,7 +22,7 @@ public abstract class AvAdapter<H extends IHolder, D> extends BaseAdapter<H, D> 
 		}
 	}
 
-	public AvAdapter(Context context, int layoutRes) {
+	public AVAdapter(Context context, int layoutRes) {
 		super(context, layoutRes);
 	}
 

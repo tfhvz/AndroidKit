@@ -16,7 +16,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class AvFragment<H extends IHolder, D, FA extends FragmentActivity> extends Fragment
+public class AVFragment<H extends IHolder, D, FA extends FragmentActivity> extends Fragment
         implements IAv<H, D>, View.OnClickListener {
     private ViewFinder finder;
     protected D _data;

@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.dcendents.android-maven'
 
-version = "1.1.9"
+version = "1.2.1"
 
 android {
     compileSdkVersion 22
@@ -39,7 +39,7 @@ install {
         pom {
             project {
                 packaging 'aar'
-                name 'AndroidKit Library' 	//项目描述
+                name 'AndroidKit Library'    //项目描述
                 url siteUrl
                 // Set your license
                 licenses {
@@ -50,7 +50,7 @@ install {
                 }
                 developers {
                     developer {
-                        id 'androidkit'		//填写的一些基本信息
+                        id 'androidkit'        //填写的一些基本信息
                         name 'snice'
                         email 'shaanxizhuzhe@163.com'
                     }
@@ -88,7 +88,7 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = "maven"
-        name = "AndroidKit-all"	//发布到JCenter上的项目名字
+        name = "AndroidKit-all"    //发布到JCenter上的项目名字
         websiteUrl = siteUrl
         vcsUrl = gitUrl
         licenses = ["Apache-2.0"]

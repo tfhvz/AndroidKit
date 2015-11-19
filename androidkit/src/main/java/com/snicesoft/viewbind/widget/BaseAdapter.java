@@ -3,6 +3,7 @@ package com.snicesoft.viewbind.widget;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 
 import com.google.gson.internal.$Gson$Types;
 import com.snicesoft.viewbind.AVKit;
@@ -122,6 +123,22 @@ abstract class BaseAdapter<H extends IHolder, D> extends android.widget.BaseAdap
             }
         }
         return convertView;
+    }
+
+    private AbsListView absListView;
+
+    public void setAbsListView(AbsListView absListView) {
+        this.absListView = absListView;
+    }
+
+    public final void notifyItem(int position) {
+        if (absListView == null || position == -1)
+            return;
+        View mView = absListView.getChildAt(position - absListView.getFirstVisiblePosition());
+        if (mView.getTag() == null)
+            return;
+        H holder = (H) mView.getTag();
+        holder.initViewParams();
     }
 
     abstract View newView(int position);

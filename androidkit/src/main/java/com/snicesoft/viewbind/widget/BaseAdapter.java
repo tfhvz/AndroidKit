@@ -131,14 +131,18 @@ abstract class BaseAdapter<H extends IHolder, D> extends android.widget.BaseAdap
         this.absListView = absListView;
     }
 
-    public final void notifyItem(int position) {
+    public final void notifyItemChanged(int position) {
         if (absListView == null || position == -1)
             return;
-        View mView = absListView.getChildAt(position - absListView.getFirstVisiblePosition());
-        if (mView.getTag() == null)
-            return;
-        H holder = (H) mView.getTag();
-        holder.initViewParams();
+        try {
+            View mView = absListView.getChildAt(position - absListView.getFirstVisiblePosition());//获取指定itemIndex在屏幕中的view
+            if (mView == null || mView.getTag() == null)
+                return;
+            H holder = (H) mView.getTag();
+            holder.initViewParams();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     abstract View newView(int position);

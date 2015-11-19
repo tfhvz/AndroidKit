@@ -2,8 +2,8 @@ package com.snicesoft.basekit.controller;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Build;
 
-import com.snicesoft.basekit.util.DialogUtil;
 import com.snicesoft.basekit.util.NetworkUtil;
 
 public class Controller {
@@ -12,7 +12,10 @@ public class Controller {
 
     public Controller(Context context) {
         this.context = context;
-        progressDialog = DialogUtil.getProgressDialog(context);
+        if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1)
+            progressDialog = new ProgressDialog(context, 0x3);
+        else
+            progressDialog = new ProgressDialog(context);
     }
 
     protected Context getContext() {

@@ -1,1 +1,1 @@
-include ':app', ':viewbind', ':basekit', ':bitmap', ':http.volley', ':androidkit'
+include ':app', ':viewbind', ':basekit', ':bitmap', ':http.volley', ':androidkit', ':pluginkit'

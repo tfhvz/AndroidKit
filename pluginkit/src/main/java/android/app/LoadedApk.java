@@ -1,8 +1,5 @@
 package android.app;
 
-import android.app.Application;
-import android.app.Instrumentation;
-
 /**
  * NOTICE:不要混淆本类
  *

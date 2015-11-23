@@ -9,7 +9,6 @@ import android.view.View.OnClickListener;
 import com.google.gson.internal.$Gson$Types;
 import com.snicesoft.viewbind.AVKit;
 import com.snicesoft.viewbind.ViewFinder;
-import com.snicesoft.pluginkit.Proxy;
 import com.snicesoft.viewbind.rule.IHolder;
 
 import java.lang.reflect.Modifier;

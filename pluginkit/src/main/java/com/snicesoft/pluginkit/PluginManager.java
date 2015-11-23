@@ -231,7 +231,7 @@ public class PluginManager implements FileFilter {
 
     /**
      * 加载指定插件或指定目录下的所有插件
-     * <p>
+     * <p/>
      * 都使用文件名作为Id
      *
      * @param pluginSrcDirFile - apk或apk目录
@@ -466,6 +466,7 @@ public class PluginManager implements FileFilter {
         CreateActivityData createActivityData = new CreateActivityData(mainActivityName, plugInfo.getPackageName());
         Intent intent = new Intent(from, Globals.selectDynamicActivity(activityInfo));
         intent.putExtra(Globals.FLAG_ACTIVITY_FROM_PLUGIN, createActivityData);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         from.startActivity(intent);
     }
 

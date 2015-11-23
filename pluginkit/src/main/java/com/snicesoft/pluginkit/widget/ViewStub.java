@@ -29,48 +29,6 @@ import android.widget.RemoteViews.RemoteView;
 
 import java.lang.ref.WeakReference;
 
-/**
- * A ViewStub is an invisible, zero-sized View that can be used to lazily
- * inflate layout resources at runtime.
- * <p>
- * When a ViewStub is made visible, or when {@link #inflate()} is invoked, the
- * layout resource is inflated. The ViewStub then replaces itself in its parent
- * with the inflated View or Views. Therefore, the ViewStub exists in the view
- * hierarchy until {@link #setVisibility(int)} or {@link #inflate()} is invoked.
- * <p>
- * The inflated View is added to the ViewStub's parent with the ViewStub's
- * layout parameters. Similarly, you can define/override the inflate View's id
- * by using the ViewStub's inflatedId property. For instance:
- * <p>
- * <pre>
- *     &lt;ViewStub android:id="@+id/stub"
- *               android:inflatedId="@+id/subTree"
- *               android:layout="@layout/mySubTree"
- *               android:layout_width="120dip"
- *               android:layout_height="40dip" /&gt;
- * </pre>
- * <p>
- * The ViewStub thus defined can be found using the id "stub." After inflation
- * of the layout resource "mySubTree," the ViewStub is removed from its parent.
- * The View created by inflating the layout resource "mySubTree" can be found
- * using the id "subTree," specified by the inflatedId property. The inflated
- * View is finally assigned a width of 120dip and a height of 40dip.
- * <p>
- * The preferred way to perform the inflation of the layout resource is the
- * following:
- * <p>
- * <pre>
- * ViewStub stub = (ViewStub) findViewById(R.id.stub);
- * View inflated = stub.inflate();
- * </pre>
- * <p>
- * When {@link #inflate()} is invoked, the ViewStub is replaced by the inflated
- * View and the inflated View is returned. This lets applications get a
- * reference to the inflated View without executing an extra findViewById().
- *
- * @attr ref android.R.styleable#ViewStub_inflatedId
- * @attr ref android.R.styleable#ViewStub_layout
- */
 @RemoteView
 public final class ViewStub extends View {
     private int mLayoutResource = 0;
@@ -140,76 +98,26 @@ public final class ViewStub extends View {
         setWillNotDraw(true);
     }
 
-    /**
-     * Returns the id taken by the inflated view. If the inflated id is
-     * {@link View#NO_ID}, the inflated view keeps its original id.
-     *
-     * @return A positive integer used to identify the inflated view or
-     * {@link #NO_ID} if the inflated view should keep its id.
-     * @attr ref android.R.styleable#ViewStub_inflatedId
-     * @see #setInflatedId(int)
-     */
     public int getInflatedId() {
         return mInflatedId;
     }
 
-    /**
-     * Defines the id taken by the inflated view. If the inflated id is
-     * {@link View#NO_ID}, the inflated view keeps its original id.
-     *
-     * @param inflatedId A positive integer used to identify the inflated view or
-     *                   {@link #NO_ID} if the inflated view should keep its id.
-     * @attr ref android.R.styleable#ViewStub_inflatedId
-     * @see #getInflatedId()
-     */
-    // @android.view.RemotableViewMethod
     public void setInflatedId(int inflatedId) {
         mInflatedId = inflatedId;
     }
 
-    /**
-     * Returns the layout resource that will be used by
-     * {@link #setVisibility(int)} or {@link #inflate()} to replace this
-     * StubbedView in its parent by another view.
-     *
-     * @return The layout resource identifier used to inflate the new View.
-     * @attr ref android.R.styleable#ViewStub_layout
-     * @see #setLayoutResource(int)
-     * @see #setVisibility(int)
-     * @see #inflate()
-     */
     public int getLayoutResource() {
         return mLayoutResource;
     }
 
-    /**
-     * Specifies the layout resource to inflate when this StubbedView becomes
-     * visible or invisible or when {@link #inflate()} is invoked. The View
-     * created by inflating the layout resource is used to replace this
-     * StubbedView in its parent.
-     *
-     * @param layoutResource A valid layout resource identifier (different from 0.)
-     * @attr ref android.R.styleable#ViewStub_layout
-     * @see #getLayoutResource()
-     * @see #setVisibility(int)
-     * @see #inflate()
-     */
-    // @android.view.RemotableViewMethod
     public void setLayoutResource(int layoutResource) {
         mLayoutResource = layoutResource;
     }
 
-    /**
-     * Set {@link LayoutInflater} to use in {@link #inflate()}, or {@code null}
-     * to use the default.
-     */
     public void setLayoutInflater(LayoutInflater inflater) {
         mInflater = inflater;
     }
 
-    /**
-     * Get current {@link LayoutInflater} used in {@link #inflate()}.
-     */
     public LayoutInflater getLayoutInflater() {
         return mInflater;
     }

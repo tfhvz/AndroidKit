@@ -1,11 +1,9 @@
 package com.snicesoft.androidkit;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.snicesoft.androidkit.android.R;
-import com.snicesoft.basekit.LogKit;
 import com.snicesoft.framework.AKActivity;
 import com.snicesoft.viewbind.annotation.Layout;
 import com.snicesoft.viewbind.rule.IHolder;
@@ -14,10 +12,9 @@ import com.snicesoft.viewbind.rule.IHolder;
 public class MainActivity extends AKActivity<MainActivity.Holder, Void> {
 
     public class Holder extends IHolder {
-
         @Override
         public void initViewParams() {
-            LogKit.d("===init");
+
         }
     }
 
@@ -31,7 +28,6 @@ public class MainActivity extends AKActivity<MainActivity.Holder, Void> {
         super.onClick(v);
         switch (v.getId()) {
             case R.id.btnPlugin:
-                startActivity(new Intent(this, PluginActivity.class));
                 break;
         }
     }

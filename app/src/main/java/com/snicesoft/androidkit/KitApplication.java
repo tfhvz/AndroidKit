@@ -9,7 +9,6 @@ import com.snicesoft.basekit.net.api.APIConfig;
 import com.snicesoft.basekit.net.api.Config;
 import com.snicesoft.basekit.net.api.ConfigFactory;
 import com.snicesoft.net.api.API;
-import com.snicesoft.pluginkit.PluginManager;
 
 /**
  * Created by zhuzhe on 15/10/10.
@@ -39,7 +38,5 @@ public class KitApplication extends Application {
         APIConfig.initTest(Config.Scheme.HTTPS, "192.168.0.122", 0, "userinfo/");
         APIConfig.initProduct(Config.Scheme.HTTPS, "89.23.78.345", 0, "userinfo/");
         API.init(ConfigFactory.Mode.TEST);
-
-        PluginManager.init(this);
     }
 }

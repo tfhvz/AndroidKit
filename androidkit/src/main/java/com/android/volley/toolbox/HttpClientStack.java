@@ -35,6 +35,7 @@ import org.apache.http.client.methods.HttpTrace;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.multipart.UploadMultipartEntity;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
@@ -92,7 +93,7 @@ public class HttpClientStack implements HttpStack {
      */
     @SuppressWarnings("deprecation")
     /* protected */ static HttpUriRequest createHttpRequest(Request<?> request,
-            Map<String, String> additionalHeaders) throws AuthFailureError {
+                                                            Map<String, String> additionalHeaders) throws AuthFailureError {
         switch (request.getMethod()) {
             case Method.DEPRECATED_GET_OR_POST: {
                 // This is the deprecated way that needs to be handled for backwards compatibility.
@@ -144,17 +145,22 @@ public class HttpClientStack implements HttpStack {
     }
 
     private static void setEntityIfNonEmptyBody(HttpEntityEnclosingRequestBase httpRequest,
-            Request<?> request) throws AuthFailureError {
-        byte[] body = request.getBody();
-        if (body != null) {
-            HttpEntity entity = new ByteArrayEntity(body);
-            httpRequest.setEntity(entity);
+                                                Request<?> request) throws AuthFailureError {
+        if (request instanceof MultiPartRequest) {
+            final UploadMultipartEntity multipartEntity = ((MultiPartRequest) request).getMultipartEntity();
+            httpRequest.setEntity(multipartEntity);
+        } else {
+            byte[] body = request.getBody();
+            if (body != null) {
+                HttpEntity entity = new ByteArrayEntity(body);
+                httpRequest.setEntity(entity);
+            }
         }
     }
 
     /**
      * Called before the request is executed using the underlying HttpClient.
-     *
+     * <p>
      * <p>Overwrite in subclasses to augment the request.</p>
      */
     protected void onPrepareRequest(HttpUriRequest request) throws IOException {

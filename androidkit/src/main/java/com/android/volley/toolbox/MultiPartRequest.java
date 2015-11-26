@@ -56,12 +56,8 @@ public abstract class MultiPartRequest extends StringRequest {
                 if (count == -1) {
                     count = mMultipartEntity.getContentLength();
                 }
-                long thisTime = SystemClock.uptimeMillis();
-                if (thisTime - time >= getRate() || count == num) {
-                    time = thisTime;
-                    if (loadListener != null) {
-                        loadListener.onLoading(count, num);
-                    }
+                if (loadListener != null) {
+                    loadListener.onLoading(count, num);
                 }
             }
         });

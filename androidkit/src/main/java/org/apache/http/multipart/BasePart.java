@@ -6,7 +6,6 @@ import org.apache.http.util.EncodingUtils;
 /**
  * Parent class for FilePart and StringPart.
  * 
- * @author <a href="mailto:vit at cleverua.com">Vitaliy Khudenko</a>
  */
 /* package */ abstract class BasePart implements Part {
     

@@ -33,13 +33,6 @@ import org.apache.http.util.CharArrayBuffer;
 /**
  * Represents a protocol version. The "major.minor" numbering
  * scheme is used to indicate versions of the protocol.
- * <p>
- * This class defines a protocol version as a combination of
- * protocol name, major version number, and minor version number.
- * Note that {@link #equals} and {@link #hashCode} are defined as
- * final here, they cannot be overridden in derived classes.
- * </p>
- *
  * @since 4.0
  */
 public class ProtocolVersion implements Serializable, Cloneable {
@@ -110,21 +103,6 @@ public class ProtocolVersion implements Serializable, Cloneable {
     }
 
 
-    /**
-     * Obtains a specific version of this protocol.
-     * This can be used by derived classes to instantiate themselves instead
-     * of the base class, and to define constants for commonly used versions.
-     * <br/>
-     * The default implementation in this class returns <code>this</code>
-     * if the version matches, and creates a new {@link ProtocolVersion}
-     * otherwise.
-     *
-     * @param major     the major version
-     * @param minor     the minor version
-     *
-     * @return  a protocol version with the same protocol name
-     *          and the argument version
-     */
     public ProtocolVersion forVersion(int major, int minor) {
 
         if ((major == this.major) && (minor == this.minor)) {
@@ -145,20 +123,6 @@ public class ProtocolVersion implements Serializable, Cloneable {
         return this.protocol.hashCode() ^ (this.major * 100000) ^ this.minor;
     }
 
-
-    /**
-     * Checks equality of this protocol version with an object.
-     * The object is equal if it is a protocl version with the same
-     * protocol name, major version number, and minor version number.
-     * The specific class of the object is <i>not</i> relevant,
-     * instances of derived classes with identical attributes are
-     * equal to instances of the base class and vice versa.
-     *
-     * @param obj       the object to compare with
-     *
-     * @return  <code>true</code> if the argument is the same protocol version,
-     *          <code>false</code> otherwise
-     */
     public final boolean equals(Object obj) {
         if (this == obj) {
             return true;
@@ -174,37 +138,11 @@ public class ProtocolVersion implements Serializable, Cloneable {
     }
 
 
-    /**
-     * Checks whether this protocol can be compared to another one.
-     * Only protocol versions with the same protocol name can be
-     * {@link #compareToVersion compared}.
-     *
-     * @param that      the protocol version to consider
-     *
-     * @return  <code>true</code> if {@link #compareToVersion compareToVersion}
-     *          can be called with the argument, <code>false</code> otherwise
-     */
     public boolean isComparable(ProtocolVersion that) {
         return (that != null) && this.protocol.equals(that.protocol);
     }
 
 
-    /**
-     * Compares this protocol version with another one.
-     * Only protocol versions with the same protocol name can be compared.
-     * This method does <i>not</i> define a total ordering, as it would be
-     * required for {@link java.lang.Comparable}.
-     *
-     * @param that      the protocl version to compare with
-     *
-     * @return   a negative integer, zero, or a positive integer
-     *           as this version is less than, equal to, or greater than
-     *           the argument version.
-     *
-     * @throws IllegalArgumentException
-     *         if the argument has a different protocol name than this object,
-     *         or if the argument is <code>null</code>
-     */
     public int compareToVersion(ProtocolVersion that) {
         if (that == null) {
             throw new IllegalArgumentException
@@ -224,31 +162,11 @@ public class ProtocolVersion implements Serializable, Cloneable {
     }
 
 
-    /**
-     * Tests if this protocol version is greater or equal to the given one.
-     *
-     * @param version   the version against which to check this version
-     *
-     * @return  <code>true</code> if this protocol version is
-     *          {@link #isComparable comparable} to the argument
-     *          and {@link #compareToVersion compares} as greater or equal,
-     *          <code>false</code> otherwise
-     */
     public final boolean greaterEquals(ProtocolVersion version) {
         return isComparable(version) && (compareToVersion(version) >= 0);
     }
 
 
-    /**
-     * Tests if this protocol version is less or equal to the given one.
-     *
-     * @param version   the version against which to check this version
-     *
-     * @return  <code>true</code> if this protocol version is
-     *          {@link #isComparable comparable} to the argument
-     *          and {@link #compareToVersion compares} as less or equal,
-     *          <code>false</code> otherwise
-     */
     public final boolean lessEquals(ProtocolVersion version) {
         return isComparable(version) && (compareToVersion(version) <= 0);
     }

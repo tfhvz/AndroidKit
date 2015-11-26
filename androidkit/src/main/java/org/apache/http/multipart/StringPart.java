@@ -7,7 +7,6 @@ import java.io.UnsupportedEncodingException;
 import org.apache.http.protocol.HTTP;
 
 /**
- * @author <a href="mailto:vit at cleverua.com">Vitaliy Khudenko</a>
  */
 public final class StringPart extends BasePart {
     

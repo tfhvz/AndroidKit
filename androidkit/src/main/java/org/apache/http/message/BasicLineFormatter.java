@@ -38,7 +38,6 @@ import org.apache.http.util.CharArrayBuffer;
  * Interface for formatting elements of the HEAD section of an HTTP message.
  * This is the complement to {@link LineParser}.
  * There are individual methods for formatting a request line, a
- * status line, or a header line. The formatting does <i>not</i> include the
  * trailing line break sequence CR-LF.
  * The formatted lines are returned in memory, the formatter does not depend
  * on any specific IO mechanism.
@@ -64,7 +63,6 @@ public class BasicLineFormatter implements LineFormatter {
     /**
      * Obtains a buffer for formatting.
      *
-     * @param buffer    a buffer already available, or <code>null</code>
      *
      * @return  the cleared argument buffer if there is one, or
      *          a new empty buffer that can be used for formatting
@@ -84,7 +82,6 @@ public class BasicLineFormatter implements LineFormatter {
      *
      * @param version           the protocol version to format
      * @param formatter         the formatter to use, or
-     *                          <code>null</code> for the
      *                          {@link #DEFAULT default}
      *
      * @return  the formatted protocol version
@@ -129,7 +126,6 @@ public class BasicLineFormatter implements LineFormatter {
      * Guesses the length of a formatted protocol version.
      * Needed to guess the length of a formatted request or status line.
      *
-     * @param version   the protocol version to format, or <code>null</code>
      *
      * @return  the estimated length of the formatted protocol version,
      *          in characters
@@ -144,7 +140,6 @@ public class BasicLineFormatter implements LineFormatter {
      *
      * @param reqline           the request line to format
      * @param formatter         the formatter to use, or
-     *                          <code>null</code> for the
      *                          {@link #DEFAULT default}
      *
      * @return  the formatted request line
@@ -177,8 +172,6 @@ public class BasicLineFormatter implements LineFormatter {
      * Called from {@link #formatRequestLine}.
      *
      * @param buffer    the empty buffer into which to format,
-     *                  never <code>null</code>
-     * @param reqline   the request line to format, never <code>null</code>
      */
     protected void doFormatRequestLine(final CharArrayBuffer buffer,
                                        final RequestLine reqline) {
@@ -204,7 +197,6 @@ public class BasicLineFormatter implements LineFormatter {
      *
      * @param statline          the status line to format
      * @param formatter         the formatter to use, or
-     *                          <code>null</code> for the
      *                          {@link #DEFAULT default}
      *
      * @return  the formatted status line
@@ -237,8 +229,6 @@ public class BasicLineFormatter implements LineFormatter {
      * Called from {@link #formatStatusLine}.
      *
      * @param buffer    the empty buffer into which to format,
-     *                  never <code>null</code>
-     * @param statline  the status line to format, never <code>null</code>
      */
     protected void doFormatStatusLine(final CharArrayBuffer buffer,
                                       final StatusLine statline) {
@@ -266,8 +256,6 @@ public class BasicLineFormatter implements LineFormatter {
      *
      * @param header            the header to format
      * @param formatter         the formatter to use, or
-     *                          <code>null</code> for the
-     *                          {@link #DEFAULT default}
      *
      * @return  the formatted header
      */
@@ -305,8 +293,6 @@ public class BasicLineFormatter implements LineFormatter {
      * Called from {@link #formatHeader}.
      *
      * @param buffer    the empty buffer into which to format,
-     *                  never <code>null</code>
-     * @param header    the header to format, never <code>null</code>
      */
     protected void doFormatHeader(final CharArrayBuffer buffer,
                                   final Header header) {

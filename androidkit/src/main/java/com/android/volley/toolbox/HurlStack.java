@@ -30,6 +30,7 @@ import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
+import org.apache.http.multipart.UploadMultipartEntity;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -250,13 +251,21 @@ public class HurlStack implements HttpStack {
 
     private static void addBodyIfExists(HttpURLConnection connection, Request<?> request)
             throws IOException, AuthFailureError {
-        byte[] body = request.getBody();
-        if (body != null) {
-            connection.setDoOutput(true);
-            connection.addRequestProperty(HEADER_CONTENT_TYPE, request.getBodyContentType());
-            DataOutputStream out = new DataOutputStream(connection.getOutputStream());
-            out.write(body);
-            out.close();
+        connection.setDoOutput(true);
+        connection.addRequestProperty(HEADER_CONTENT_TYPE, request.getBodyContentType());
+
+        if (request instanceof MultiPartRequest) {
+            final UploadMultipartEntity multipartEntity = ((MultiPartRequest) request).getMultipartEntity();
+            // 防止所有文件写到内存中
+            connection.setFixedLengthStreamingMode((int)multipartEntity.getContentLength());
+            multipartEntity.writeTo(connection.getOutputStream());
+        } else {
+            byte[] body = request.getBody();
+            if (body != null) {
+                DataOutputStream out = new DataOutputStream(connection.getOutputStream());
+                out.write(body);
+                out.close();
+            }
         }
     }
 }

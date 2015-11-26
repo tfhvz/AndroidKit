@@ -10,23 +10,11 @@ import org.apache.http.protocol.HTTP;
 
 
 /**
- * @author <a href="mailto:vit at cleverua.com">Vitaliy Khudenko</a>
  */
 public final class FilePart extends BasePart {
 
     private final File file;
-    
-    /**
-     * @param name String - name of parameter (may not be <code>null</code>).
-     * @param file File (may not be <code>null</code>).
-     * @param filename String. If <code>null</code> is passed, 
-     *        then <code>file.getName()</code> is used.
-     * @param contentType String. If <code>null</code> is passed, 
-     *        then default "application/octet-stream" is used.
-     * 
-     * @throws IllegalArgumentException if either <code>file</code> 
-     *         or <code>name</code> is <code>null</code>.
-     */
+
     public FilePart(String name, File file, String filename, String contentType) {
         if (file == null) {
             throw new IllegalArgumentException("File may not be null");     //$NON-NLS-1$

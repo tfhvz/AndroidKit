@@ -7,7 +7,6 @@ import org.apache.http.util.EncodingUtils;
 import android.text.TextUtils;
 
 /**
- * @author <a href="mailto:vit at cleverua.com">Vitaliy Khudenko</a>
  */
 /* package */ class Boundary {
 

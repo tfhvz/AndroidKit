@@ -86,7 +86,8 @@ public class AVFragment<H extends IHolder, D, FA extends FragmentActivity> exten
     }
 
     @Override
-    public void onClick(View view) {
-
+    public void onClick(View v) {
+        if (v == null)
+            return;
     }
 }

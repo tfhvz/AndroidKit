@@ -15,6 +15,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.MultiPartRequest;
 import com.android.volley.toolbox.PostUploadRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -118,7 +119,7 @@ public class VolleyHttpKit extends HttpKit {
     @Override
     public void postFile(final HttpRequest request, final HttpCallBack callBack) {
 
-        final PostUploadRequest.LoadListener loadListener = new PostUploadRequest.LoadListener() {
+        final MultiPartRequest.LoadListener loadListener = new MultiPartRequest.LoadListener() {
             @Override
             public void onLoading(long count, long current) {
                 if (callBack != null) {
@@ -126,7 +127,7 @@ public class VolleyHttpKit extends HttpKit {
                 }
             }
         };
-        PostUploadRequest volleyRequest = new PostUploadRequest(request.getUrl(), getListener(callBack), getErrorListener(callBack)) {
+        MultiPartRequest volleyRequest = new MultiPartRequest(request.getUrl(), getListener(callBack), getErrorListener(callBack)) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 return request.getParams();

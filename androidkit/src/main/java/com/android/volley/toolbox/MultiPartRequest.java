@@ -39,9 +39,9 @@ public abstract class MultiPartRequest extends StringRequest {
      */
     public static final int TIMEOUT_MS = 60000;
 
-    public MultiPartRequest(int method, String url, Response.Listener<String> listener,
+    public MultiPartRequest(String url, Response.Listener<String> listener,
                             Response.ErrorListener errorListener) {
-        super(method, url, listener, errorListener);
+        super(Method.POST, url, listener, errorListener);
         mMultipartEntity = new UploadMultipartEntity();
         mMultipartEntity.setListener(new ProgressListener() {
             public long getRate() {

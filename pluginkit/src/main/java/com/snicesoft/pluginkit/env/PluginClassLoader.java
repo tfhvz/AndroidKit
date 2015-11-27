@@ -20,6 +20,9 @@ import java.util.HashMap;
 import java.util.Map;
 import android.annotation.SuppressLint;
 import android.util.Log;
+
+import com.snicesoft.pluginkit.Globals;
+
 import dalvik.system.DexClassLoader;
 
 /**
@@ -58,7 +61,7 @@ public class PluginClassLoader extends DexClassLoader {
 			actLoader = new DexClassLoader(dexSavePath.getAbsolutePath(), optimizedDirectory,libraryPath, this);
 			proxyActivityLoaderMap.put(actClassName, actLoader);
 		}
-		return actLoader.loadClass(ActivityOverider.targetClassName);
+		return actLoader.loadClass(Globals.getPluginTargetActivity().getName());
 	}
 	
 }

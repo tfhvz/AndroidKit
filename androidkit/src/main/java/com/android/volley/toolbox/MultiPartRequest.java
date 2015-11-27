@@ -1,6 +1,8 @@
 
 package com.android.volley.toolbox;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.os.SystemClock;
 
 import com.android.volley.AuthFailureError;
@@ -38,32 +40,42 @@ public abstract class MultiPartRequest extends StringRequest {
      * Default connection timeout for Multipart requests
      */
     public static final int TIMEOUT_MS = 60000;
+    private long count = -1;
+    private long lastNum = -1;
 
     public MultiPartRequest(String url, Response.Listener<String> listener,
                             Response.ErrorListener errorListener) {
         super(Method.POST, url, listener, errorListener);
+        final Handler handler = new Handler(Looper.getMainLooper());
         mMultipartEntity = new UploadMultipartEntity();
         mMultipartEntity.setListener(new ProgressListener() {
-            public long getRate() {
-                return 100L;
-            }
-
             long time = SystemClock.uptimeMillis();
-            long count = -1;
+
 
             @Override
             public void transferred(long num) {
                 if (count == -1) {
                     count = mMultipartEntity.getContentLength();
                 }
-                if (loadListener != null) {
-                    loadListener.onLoading(count, num);
-                }
+                if (num == lastNum)
+                    return;
+                lastNum = num;
+                handler.post(loadRun);
+
             }
         });
         setRetryPolicy(new DefaultRetryPolicy(TIMEOUT_MS, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
+
+    Runnable loadRun = new Runnable() {
+        @Override
+        public void run() {
+            if (loadListener != null) {
+                loadListener.onLoading(count, lastNum);
+            }
+        }
+    };
 
     @Override
     public String getBodyContentType() {

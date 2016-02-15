@@ -46,6 +46,7 @@ public class AvAppCompatActivity<H extends IHolder, D> extends AppCompatActivity
         try {
             _holder = newHolder();
             _data = newData();
+            AutoControllerUtils.loadController(this, getClass(), this);
         } catch (Exception e) {
             e.printStackTrace();
         }

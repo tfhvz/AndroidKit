@@ -42,6 +42,7 @@ public class AVActivity<H extends IHolder, D> extends Activity implements IAv<H,
         try {
             _holder = newHolder();
             _data = newData();
+            AutoControllerUtils.loadController(this, getClass(), this);
         } catch (Exception e) {
             e.printStackTrace();
         }

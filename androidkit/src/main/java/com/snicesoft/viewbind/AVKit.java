@@ -12,6 +12,8 @@ import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.snicesoft.basekit.BitmapKit;
+import com.snicesoft.basekit.bitmap.BitmapConfig;
 import com.snicesoft.viewbind.annotation.DataBind;
 import com.snicesoft.viewbind.annotation.Id;
 import com.snicesoft.viewbind.rule.IHolder;
@@ -52,7 +54,13 @@ public class AVKit {
 
     private static SimpleDateFormat dateFormat = new SimpleDateFormat();
 
-    private static LoadImg loadImg;
+    private static LoadImg loadImg = new LoadImg() {
+        @Override
+        public void loadImg(View v, int loadingResId, int failResId, String url) {
+            BitmapConfig config = new BitmapConfig(loadingResId, failResId);
+            BitmapKit.getInstance().display(v, url, config);
+        }
+    };
 
     /**
      * 数据绑定到view

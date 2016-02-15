@@ -43,6 +43,7 @@ public class AVFragment<H extends IHolder, D, FA extends FragmentActivity> exten
         try {
             _holder = newHolder();
             _data = newData();
+            AutoControllerUtils.loadController(fa(), getClass(), this);
         } catch (Exception e) {
             e.printStackTrace();
         }

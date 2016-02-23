@@ -1,6 +1,7 @@
 package com.snicesoft.viewbind;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
@@ -131,6 +132,10 @@ public class AVKit {
         DataBind dataBind = field.getAnnotation(DataBind.class);
         if (dataBind != null) {
             int vid = dataBind.id();
+            if (vid == 0) {
+                Context context = finder.getParent().getContext();
+                vid = context.getResources().getIdentifier(dataBind.name(), "id", context.getPackageName());
+            }
             View view = finder.findViewById(vid);
             if (view != null)
                 setValue(view, new ViewValue(value, dataBind));
@@ -188,6 +193,10 @@ public class AVKit {
                     if (resource == null)
                         continue;
                     int resId = resource.value();
+                    if (resId == 0) {
+                        Context context = finder.getParent().getContext();
+                        resId = context.getResources().getIdentifier(resource.name(), "id", context.getPackageName());
+                    }
                     int background = resource.background();
                     int backgroundColor = resource.backgroundColor();
                     int src = resource.src();

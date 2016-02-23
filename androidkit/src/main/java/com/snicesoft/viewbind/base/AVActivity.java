@@ -38,7 +38,7 @@ public class AVActivity<H extends IHolder, D> extends Activity implements IAv<H,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(LayoutUtils.getLayoutId(getThisClass()));
+        setContentView(LayoutUtils.getLayoutId(this, getThisClass()));
         try {
             _holder = newHolder();
             _data = newData();

@@ -42,7 +42,7 @@ public class AvAppCompatActivity<H extends IHolder, D> extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(LayoutUtils.getLayoutId(getThisClass()));
+        setContentView(LayoutUtils.getLayoutId(this, getThisClass()));
         try {
             _holder = newHolder();
             _data = newData();

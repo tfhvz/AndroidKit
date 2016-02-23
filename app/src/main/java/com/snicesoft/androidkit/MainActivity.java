@@ -1,22 +1,33 @@
 package com.snicesoft.androidkit;
 
 import android.view.View;
+import android.widget.Button;
 
 import com.snicesoft.androidkit.android.R;
+import com.snicesoft.basekit.LogKit;
 import com.snicesoft.framework.AKActivity;
 import com.snicesoft.net.controller.TestController;
 import com.snicesoft.viewbind.annotation.AutoController;
+import com.snicesoft.viewbind.annotation.DataBind;
+import com.snicesoft.viewbind.annotation.Id;
 import com.snicesoft.viewbind.annotation.Layout;
 import com.snicesoft.viewbind.rule.IHolder;
 
-@Layout(R.layout.activity_main)
-public class MainActivity extends AKActivity<MainActivity.Holder, Void> {
+@Layout(name = "activity_main")
+public class MainActivity extends AKActivity<MainActivity.Holder, MainActivity.Data> {
 
     public class Holder extends IHolder {
+        @Id(name = "btnPlugin")
+        Button btnPlugin;
         @Override
         public void initViewParams() {
-
+            LogKit.d("test:"+btnPlugin.toString());
         }
+    }
+
+    public class Data{
+        @DataBind(name = "btnPlugin")
+        String name = "zenme是大写";
     }
     @AutoController
     TestController testController;

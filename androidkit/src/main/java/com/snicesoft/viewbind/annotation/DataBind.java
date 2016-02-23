@@ -7,39 +7,41 @@ import java.lang.annotation.Target;
 
 /**
  * @author zhu zhe
- * @since 2015年4月15日 上午9:52:28
  * @version V1.0
+ * @since 2015年4月15日 上午9:52:28
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DataBind {
-	public int id();
+    public int id() default 0;
 
-	public DataType dataType() default DataType.STRING;
+    public String name() default "";
 
-	public int loadingResId() default 0;
+    public DataType dataType() default DataType.STRING;
 
-	public int failResId() default 0;
+    public int loadingResId() default 0;
 
-	/**
-	 * 前缀
-	 * 
-	 * @return
-	 */
-	public String prefix() default "";
+    public int failResId() default 0;
 
-	/**
-	 * 后缀
-	 * 
-	 * @return
-	 */
-	public String suffix() default "";
+    /**
+     * 前缀
+     *
+     * @return
+     */
+    public String prefix() default "";
 
-	/**
-	 * 格式化Date
-	 * 
-	 * @return
-	 */
-	public String pattern() default "";
+    /**
+     * 后缀
+     *
+     * @return
+     */
+    public String suffix() default "";
+
+    /**
+     * 格式化Date
+     *
+     * @return
+     */
+    public String pattern() default "";
 
 }

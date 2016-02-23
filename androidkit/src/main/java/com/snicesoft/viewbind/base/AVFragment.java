@@ -39,7 +39,7 @@ public class AVFragment<H extends IHolder, D, FA extends FragmentActivity> exten
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(LayoutUtils.getLayoutId(getClass()), null);
+        View root = inflater.inflate(LayoutUtils.getLayoutId(fa(), getClass()), null);
         try {
             _holder = newHolder();
             _data = newData();

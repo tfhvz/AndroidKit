@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.google.gson.internal.$Gson$Types;
 import com.snicesoft.viewbind.AVKit;
+import com.snicesoft.viewbind.LayoutUtils;
 import com.snicesoft.viewbind.ViewFinder;
 import com.snicesoft.viewbind.rule.IHolder;
 

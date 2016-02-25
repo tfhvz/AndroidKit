@@ -47,7 +47,7 @@ public class MainActivity extends AKActivity<MainActivity.Holder, MainActivity.D
         super.onClick(v);
         switch (v.getId()) {
             case R.id.btnPlugin:
-                HttpRequest request = new HttpRequest("http://112.64.141.78:8811/web-weiding/charityRecord/love");
+                HttpRequest request = new HttpRequest("http://192.168.10.161:8080/web-weiding/charityRecord/love");
 //                request.addFile("file", new File("/storage/sdcard0/DCIM/Camera/IMG_20151110_164815.jpg"));
                 HttpKit.getInstance().get(request, new HttpCallBack<Result<String>>() {
 

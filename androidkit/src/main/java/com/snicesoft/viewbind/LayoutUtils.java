@@ -1,10 +1,10 @@
-package com.snicesoft.viewbind.base;
+package com.snicesoft.viewbind;
 
 import android.content.Context;
 
 import com.snicesoft.viewbind.annotation.Layout;
 
-class LayoutUtils {
+public class LayoutUtils {
     public static int getLayoutId(Context context, Class<?> clazz) {
         int layoutId = 0;
         Layout layout = clazz.getAnnotation(Layout.class);

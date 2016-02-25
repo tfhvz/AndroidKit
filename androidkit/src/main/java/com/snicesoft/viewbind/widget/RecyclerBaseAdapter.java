@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import com.google.gson.internal.$Gson$Types;
 import com.snicesoft.viewbind.AVKit;
 import com.snicesoft.viewbind.ViewFinder;
-import com.snicesoft.viewbind.annotation.Layout;
 import com.snicesoft.viewbind.rule.RecyclerHolder;
 
 import java.lang.reflect.Modifier;
@@ -23,14 +22,6 @@ import java.util.List;
 public abstract class RecyclerBaseAdapter<VH extends RecyclerHolder, D> extends RecyclerView.Adapter<VH> {
     protected int resource;
     private List<D> dataList;
-
-    public RecyclerBaseAdapter() {
-        this.dataList = new ArrayList<D>();
-        Layout layout = getClass().getAnnotation(Layout.class);
-        if (layout != null && layout.value() != 0) {
-            this.resource = layout.value();
-        }
-    }
 
     public RecyclerBaseAdapter(int layoutRes) {
         this.dataList = new ArrayList<D>();

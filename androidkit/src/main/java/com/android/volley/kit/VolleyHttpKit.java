@@ -68,6 +68,7 @@ public class VolleyHttpKit extends HttpKit {
                             cancelTimer(callBack);
                             callBack.onSuccess(o);
                         } catch (Exception e) {
+                            cancelTimer(callBack);
                             callBack.onError(new HttpError("GSON 匹配错误."));
                         }
 
@@ -83,8 +84,10 @@ public class VolleyHttpKit extends HttpKit {
             public void onErrorResponse(VolleyError error) {
                 if (callBack != null) {
                     if (error == null) {
+                        cancelTimer(callBack);
                         callBack.onError(null);
                     } else {
+                        cancelTimer(callBack);
                         callBack.onError(new HttpError(error.getMessage()));
                     }
                 }

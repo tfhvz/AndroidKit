@@ -16,10 +16,4 @@ public @interface Id {
     public int value() default 0;
 
     public String name() default "";
-
-    public int background() default 0;
-
-    public int backgroundColor() default 0;
-
-    public int src() default 0;
 }

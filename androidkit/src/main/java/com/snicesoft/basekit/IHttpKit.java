@@ -8,6 +8,8 @@ import com.snicesoft.basekit.http.HttpRequest;
 interface IHttpKit {
     public void setShouldCache(boolean shouldCache);
 
+    public void setTimeout(long timeout);
+
     public void get(HttpRequest request, HttpCallBack callBack);
 
     public void post(HttpRequest request, HttpCallBack callBack);

@@ -197,17 +197,8 @@ public class AVKit {
                         Context context = finder.getParent().getContext();
                         resId = context.getResources().getIdentifier(resource.name(), "id", context.getPackageName());
                     }
-                    int background = resource.background();
-                    int backgroundColor = resource.backgroundColor();
-                    int src = resource.src();
                     View v = finder.findViewById(resId);
                     if (v != null) {
-                        if (backgroundColor != 0)
-                            v.setBackgroundColor(backgroundColor);
-                        if (background != 0)
-                            v.setBackgroundResource(background);
-                        if (src != 0 && v instanceof ImageView)
-                            ((ImageView) v).setImageResource(src);
                         if (field.get(holder) == null)
                             field.set(holder, v);
                     }
@@ -235,7 +226,9 @@ public class AVKit {
         String p = viewValue.getDataBind().prefix();
         String s = viewValue.getDataBind().suffix();
         int loading = viewValue.getDataBind().loadingResId();
+        String loadName = viewValue.getDataBind().loadingResName();
         int fail = viewValue.getDataBind().failResId();
+        String failName = viewValue.getDataBind().failResName();
         String pattern = viewValue.getDataBind().pattern();
         switch (viewValue.getDataBind().dataType()) {
             case STRING:
@@ -264,8 +257,16 @@ public class AVKit {
                         view.setBackgroundResource(resId);
                     }
                 } else if (value instanceof String) {
-                    if (loadImg != null)
+                    if (loadImg != null) {
+                        Context context = view.getContext();
+                        if (loading == 0) {
+                            loading = context.getResources().getIdentifier(loadName, "drawable", context.getPackageName()) | context.getResources().getIdentifier(loadName, "mipmap", context.getPackageName());
+                        }
+                        if (fail == 0) {
+                            fail = context.getResources().getIdentifier(failName, "drawable", context.getPackageName()) | context.getResources().getIdentifier(failName, "mipmap", context.getPackageName());
+                        }
                         loadImg.loadImg(view, loading, fail, p + value.toString() + s);
+                    }
                 }
                 break;
             case CHECK:

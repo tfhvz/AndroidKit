@@ -16,7 +16,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.MultiPartRequest;
-import com.android.volley.toolbox.PostUploadRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
@@ -37,14 +36,14 @@ import java.util.Map;
  */
 @SuppressLint({"rawtypes", "unchecked"})
 public class VolleyHttpKit extends HttpKit {
-    private Map<HttpRequest, Request> requestMap;
+
     private RequestQueue volleyQueue;
     private Gson mGson;
-    private boolean shouldCache = true;
 
     private VolleyHttpKit(Context context) {
         volleyQueue = Volley.newRequestQueue(context);
         requestMap = new HashMap<HttpRequest, Request>();
+        timeoutTimerMap = new HashMap<HttpCallBack, TimeoutTimer>();
         mGson = new Gson();
     }
 
@@ -61,10 +60,12 @@ public class VolleyHttpKit extends HttpKit {
             public void onResponse(String response) {
                 if (callBack != null) {
                     if (callBack.mType == String.class) {
+                        cancelTimer(callBack);
                         callBack.onSuccess(response);
                     } else {
                         try {
                             Object o = mGson.fromJson(response, callBack.mType);
+                            cancelTimer(callBack);
                             callBack.onSuccess(o);
                         } catch (Exception e) {
                             callBack.onError(new HttpError("GSON 匹配错误."));
@@ -89,11 +90,6 @@ public class VolleyHttpKit extends HttpKit {
                 }
             }
         };
-    }
-
-    @Override
-    public void setShouldCache(boolean shouldCache) {
-        this.shouldCache = shouldCache;
     }
 
     @Override
@@ -147,6 +143,7 @@ public class VolleyHttpKit extends HttpKit {
         volleyRequest.setLoadListener(loadListener);
         requestMap.put(request, volleyRequest);
         volleyQueue.add(volleyRequest);
+        startTimeout(request, callBack);
     }
 
     @Override
@@ -175,6 +172,7 @@ public class VolleyHttpKit extends HttpKit {
         volleyRequest.setShouldCache(shouldCache);
         requestMap.put(request, volleyRequest);
         volleyQueue.add(volleyRequest);
+        startTimeout(request, callBack);
     }
 
     private void send(final int method, final HttpRequest request, final HttpCallBack callBack) {
@@ -208,6 +206,7 @@ public class VolleyHttpKit extends HttpKit {
         volleyRequest.setShouldCache(shouldCache);
         requestMap.put(request, volleyRequest);
         volleyQueue.add(volleyRequest);
+        startTimeout(request, callBack);
     }
 
     @Override

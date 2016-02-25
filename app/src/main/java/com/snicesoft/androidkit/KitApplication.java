@@ -31,6 +31,7 @@ public class KitApplication extends Application {
 
         //1:http组件之volley
         VolleyHttpKit.getInstance(getApplicationContext());
+        VolleyHttpKit.getInstance().setTimeout(5000);
         //2:http组件之Okhttp
         //OkhttpKit.getInstance();
 

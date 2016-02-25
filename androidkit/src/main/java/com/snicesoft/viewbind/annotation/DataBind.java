@@ -21,7 +21,11 @@ public @interface DataBind {
 
     public int loadingResId() default 0;
 
+    public String loadingResName() default "";
+
     public int failResId() default 0;
+
+    public String failResName() default "";
 
     /**
      * 前缀

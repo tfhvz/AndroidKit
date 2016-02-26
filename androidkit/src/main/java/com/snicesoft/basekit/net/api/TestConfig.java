@@ -4,21 +4,21 @@ class TestConfig extends Config {
 
     @Override
     public String getScheme() {
-        return APIConfig.Test.scheme;
+        return API.Test.scheme;
     }
 
     @Override
     public String getIP() {
-        return APIConfig.Test.ip;
+        return API.Test.ip;
     }
 
     @Override
     public String getApiBaseName() {
-        return APIConfig.Test.apiBaseName;
+        return API.Test.apiBaseName;
     }
 
     @Override
     public int getPort() {
-        return APIConfig.Test.port;
+        return API.Test.port;
     }
 }

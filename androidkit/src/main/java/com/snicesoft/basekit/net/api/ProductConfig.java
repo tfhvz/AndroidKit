@@ -8,21 +8,21 @@ package com.snicesoft.basekit.net.api;
 class ProductConfig extends Config {
     @Override
     public String getScheme() {
-        return APIConfig.Product.scheme;
+        return API.Product.scheme;
     }
 
     @Override
     public String getIP() {
-        return APIConfig.Product.ip;
+        return API.Product.ip;
     }
 
     @Override
     public String getApiBaseName() {
-        return APIConfig.Product.apiBaseName;
+        return API.Product.apiBaseName;
     }
 
     @Override
     public int getPort() {
-        return APIConfig.Product.port;
+        return API.Product.port;
     }
 }

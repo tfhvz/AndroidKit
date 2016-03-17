@@ -1,8 +1,10 @@
 package com.snicesoft.viewbind.base;
 
-interface IAv<H, D> {
+public interface IAv {
 
     public void dataBindAll();
 
-    public void dataBindTo(String fieldName);
+    public void dataBindTo(int id);
+
+    public int layout();
 }

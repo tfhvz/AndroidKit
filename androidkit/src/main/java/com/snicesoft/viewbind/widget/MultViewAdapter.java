@@ -7,20 +7,20 @@ import com.snicesoft.viewbind.rule.IHolder;
 
 @SuppressWarnings("rawtypes")
 public abstract class MultViewAdapter<H extends IHolder, D> extends BaseAdapter<H, D> {
-	public MultViewAdapter(Context context) {
-		super(context);
-	}
+    public MultViewAdapter(Context context) {
+        super(context);
+    }
 
-	public MultViewAdapter(Context context, int layoutRes) {
-		super(context, layoutRes);
-	}
+    public MultViewAdapter(Context context, int layoutRes) {
+        super(context, layoutRes);
+    }
 
-	public abstract int getItemViewType(int position);
+    public abstract int getItemViewType(int position);
 
-	public abstract int getViewTypeCount();
+    public abstract int getViewTypeCount();
 
-	@Override
-	final View newView(int position) {
-		return View.inflate(getContext(), getItemViewType(position), null);
-	}
+    @Override
+    View newView(int position) {
+        return View.inflate(getContext(), getItemViewType(position), null);
+    }
 }

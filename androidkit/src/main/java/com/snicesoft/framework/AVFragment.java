@@ -1,27 +1,27 @@
-package com.snicesoft.viewbind.base;
+package com.snicesoft.framework;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 
 import com.google.gson.internal.$Gson$Types;
 import com.snicesoft.viewbind.AVKit;
-import com.snicesoft.viewbind.LayoutUtils;
 import com.snicesoft.viewbind.ViewFinder;
+import com.snicesoft.viewbind.base.IAv;
 import com.snicesoft.viewbind.rule.IHolder;
+import com.snicesoft.viewbind.utils.AutoUtils;
+import com.snicesoft.viewbind.utils.LayoutUtils;
 
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-/**
- * @param <H>
- * @param <D>
- * @author zhe
- */
-@SuppressWarnings("rawtypes")
-public class AVActivity<H extends IHolder, D> extends Activity implements IAv<H, D>, OnClickListener {
+@SuppressWarnings({"unchecked", "rawtypes"})
+public class AVFragment<H extends IHolder, D, FA extends FragmentActivity> extends Fragment
+        implements IAv, View.OnClickListener {
     private ViewFinder finder;
     protected D _data;
     protected H _holder;
@@ -32,39 +32,40 @@ public class AVActivity<H extends IHolder, D> extends Activity implements IAv<H,
     }
 
     @Override
-    public final void dataBindTo(String fieldName) {
-        AVKit.dataBindTo(_data, finder, fieldName);
+    public void dataBindTo(int id) {
+        AVKit.dataBindTo(_data, finder, id);
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(LayoutUtils.getLayoutId(this, getThisClass()));
+    public int layout() {
+        return 0;
+    }
+
+    public final FA fa() {
+        return (FA) getActivity();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View root = inflater.inflate(LayoutUtils.getLayoutId(fa(), getClass()), null);
         try {
             _holder = newHolder();
             _data = newData();
-            AutoControllerUtils.loadController(this, getClass(), this);
+            AutoUtils.loadContext(fa(), getClass(), this);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        finder = new ViewFinder(this);
+        finder = new ViewFinder(root);
         AVKit.initHolder(_holder, finder);
         dataBindAll();
-    }
-
-    public Class<?> getThisClass() {
-        Class<?> clazz = getClass();
-        if (Proxy.PROXY_ACTIVITY.equals(clazz.getName())) {
-            clazz = getClass().getSuperclass();
-        }
-        return clazz;
+        return root;
     }
 
     D newData() throws Exception {
         Class dClass = $Gson$Types.getRawType(getType(1));
         if (dClass == Void.class)
             return null;
-        if (dClass.getName().contains(getThisClass().getName() + "$")) {
+        if (dClass.getName().contains(getClass().getName() + "$")) {
             if (Modifier.isStatic(dClass.getModifiers()))
                 return (D) dClass.newInstance();
             return (D) dClass.getConstructors()[0].newInstance(this);
@@ -76,7 +77,7 @@ public class AVActivity<H extends IHolder, D> extends Activity implements IAv<H,
         Class hClass = $Gson$Types.getRawType(getType(0));
         if (hClass == IHolder.class)
             return null;
-        if (hClass.getName().contains(getThisClass().getName() + "$")) {
+        if (hClass.getName().contains(getClass().getName() + "$")) {
             if (Modifier.isStatic(hClass.getModifiers()))
                 return (H) hClass.newInstance();
             return (H) hClass.getConstructors()[0].newInstance(this);
@@ -85,7 +86,7 @@ public class AVActivity<H extends IHolder, D> extends Activity implements IAv<H,
     }
 
     Type getType(int index) {
-        Type superclass = getThisClass().getGenericSuperclass();
+        Type superclass = getClass().getGenericSuperclass();
         if (superclass instanceof Class) {
             throw new RuntimeException("Missing type parameter.");
         }

@@ -4,15 +4,10 @@ import android.view.View;
 import android.widget.Button;
 
 import com.snicesoft.androidkit.android.R;
-import com.snicesoft.basekit.HttpKit;
 import com.snicesoft.basekit.LogKit;
-import com.snicesoft.basekit.http.HttpCallBack;
-import com.snicesoft.basekit.http.HttpError;
-import com.snicesoft.basekit.http.HttpRequest;
-import com.snicesoft.basekit.util.CommonUtils;
 import com.snicesoft.framework.AKActivity;
 import com.snicesoft.net.controller.TestController;
-import com.snicesoft.viewbind.annotation.AutoController;
+import com.snicesoft.viewbind.annotation.Context;
 import com.snicesoft.viewbind.annotation.DataBind;
 import com.snicesoft.viewbind.annotation.DataType;
 import com.snicesoft.viewbind.annotation.Id;
@@ -39,7 +34,7 @@ public class MainActivity extends AKActivity<MainActivity.Holder, MainActivity.D
         String img = "";
     }
 
-    @AutoController
+    @Context
     TestController testController;
 
     @Override
@@ -47,25 +42,27 @@ public class MainActivity extends AKActivity<MainActivity.Holder, MainActivity.D
         super.onClick(v);
         switch (v.getId()) {
             case R.id.btnPlugin:
-                HttpRequest request = new HttpRequest("http://192.168.10.161:8080/web-weiding/charityRecord/love");
-//                request.addFile("file", new File("/storage/sdcard0/DCIM/Camera/IMG_20151110_164815.jpg"));
-                HttpKit.getInstance().get(request, new HttpCallBack<Result<String>>() {
-
-                    @Override
-                    public void onSuccess(Result<String> resourceResult) {
-                        CommonUtils.showToast(getBaseContext(), "成功");
-                    }
-
-                    @Override
-                    public void onLoading(long count, long current) {
-//                        LogKit.d("==" + current + "/" + count);
-                    }
-
-                    @Override
-                    public void onError(HttpError error) {
-                        CommonUtils.showToast(getBaseContext(), "失败");
-                    }
-                });
+                _data.name = "dsfdsf";
+                dataBindTo(R.id.btnPlugin);
+//                HttpRequest request = new HttpRequest("http://192.168.10.161:8080/web-weiding/charityRecord/love");
+////                request.addFile("file", new File("/storage/sdcard0/DCIM/Camera/IMG_20151110_164815.jpg"));
+//                HttpKit.getInstance().get(request, new HttpCallBack<Result<String>>() {
+//
+//                    @Override
+//                    public void onSuccess(Result<String> resourceResult) {
+//                        CommonUtils.showToast(getBaseContext(), "成功");
+//                    }
+//
+//                    @Override
+//                    public void onLoading(long count, long current) {
+////                        LogKit.d("==" + current + "/" + count);
+//                    }
+//
+//                    @Override
+//                    public void onError(HttpError error) {
+//                        CommonUtils.showToast(getBaseContext(), "失败");
+//                    }
+//                });
                 break;
         }
     }

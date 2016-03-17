@@ -8,9 +8,10 @@ import android.view.View.OnClickListener;
 
 import com.google.gson.internal.$Gson$Types;
 import com.snicesoft.viewbind.AVKit;
-import com.snicesoft.viewbind.LayoutUtils;
 import com.snicesoft.viewbind.ViewFinder;
 import com.snicesoft.viewbind.rule.IHolder;
+import com.snicesoft.viewbind.utils.AutoUtils;
+import com.snicesoft.viewbind.utils.LayoutUtils;
 
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -25,7 +26,7 @@ import java.lang.reflect.Type;
  */
 @SuppressWarnings("rawtypes")
 @SuppressLint("NewApi")
-public class AvAppCompatActivity<H extends IHolder, D> extends AppCompatActivity implements IAv<H, D>, OnClickListener {
+public class AvAppCompatActivity<H extends IHolder, D> extends AppCompatActivity implements IAv, OnClickListener {
     private ViewFinder finder;
     protected D _data;
     protected H _holder;
@@ -36,8 +37,13 @@ public class AvAppCompatActivity<H extends IHolder, D> extends AppCompatActivity
     }
 
     @Override
-    public final void dataBindTo(String fieldName) {
-        AVKit.dataBindTo(_data, finder, fieldName);
+    public void dataBindTo(int id) {
+        AVKit.dataBindTo(_data, finder, id);
+    }
+
+    @Override
+    public int layout() {
+        return 0;
     }
 
     @Override
@@ -47,7 +53,7 @@ public class AvAppCompatActivity<H extends IHolder, D> extends AppCompatActivity
         try {
             _holder = newHolder();
             _data = newData();
-            AutoControllerUtils.loadController(this, getClass(), this);
+            AutoUtils.loadContext(this, getClass(), this);
         } catch (Exception e) {
             e.printStackTrace();
         }

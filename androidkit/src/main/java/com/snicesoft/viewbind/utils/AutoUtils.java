@@ -1,8 +1,6 @@
-package com.snicesoft.viewbind.base;
+package com.snicesoft.viewbind.utils;
 
-import android.content.Context;
-
-import com.snicesoft.viewbind.annotation.AutoController;
+import com.snicesoft.viewbind.annotation.Context;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -11,16 +9,16 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * Created by zhuzhe on 16/1/7.
  */
-class AutoControllerUtils {
-    public static void loadController(Context context, Class clazz, Object object) {
+public class AutoUtils {
+    public static void loadContext(android.content.Context context, Class clazz, Object object) {
         Field[] fs = clazz.getDeclaredFields();
         for (Field f : fs) {
-            if (f.getAnnotation(AutoController.class) == null)
+            if (f.getAnnotation(Context.class) == null)
                 continue;
             f.setAccessible(true);
             try {
                 Class fType = (Class) f.getGenericType();
-                Constructor constructor = fType.getConstructor(Context.class);
+                Constructor constructor = fType.getConstructor(android.content.Context.class);
                 if (constructor != null) {
                     f.set(object, constructor.newInstance(context));
                 }

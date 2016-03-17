@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 
 import com.google.gson.internal.$Gson$Types;
+import com.snicesoft.basekit.util.ListUtils;
 import com.snicesoft.viewbind.AVKit;
 import com.snicesoft.viewbind.ViewFinder;
 import com.snicesoft.viewbind.rule.IHolder;
@@ -78,7 +79,7 @@ abstract class BaseAdapter<H extends IHolder, D> extends android.widget.BaseAdap
 
     @Override
     public int getCount() {
-        return dataList == null ? 0 : dataList.size();
+        return ListUtils.getSize(this.dataList);
     }
 
     @Override

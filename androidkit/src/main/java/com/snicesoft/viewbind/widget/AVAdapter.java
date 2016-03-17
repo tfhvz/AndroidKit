@@ -3,8 +3,8 @@ package com.snicesoft.viewbind.widget;
 import android.content.Context;
 import android.view.View;
 
-import com.snicesoft.viewbind.LayoutUtils;
 import com.snicesoft.viewbind.rule.IHolder;
+import com.snicesoft.viewbind.utils.LayoutUtils;
 
 /**
  * @author zhu zhe
@@ -12,7 +12,7 @@ import com.snicesoft.viewbind.rule.IHolder;
  * @since 2015年4月15日 上午9:52:57
  */
 @SuppressWarnings("rawtypes")
-public abstract class AVAdapter<H extends IHolder, D> extends BaseAdapter<H, D> {
+public class AVAdapter<H extends IHolder, D> extends BaseAdapter<H, D> {
 
     public AVAdapter(Context context) {
         super(context);

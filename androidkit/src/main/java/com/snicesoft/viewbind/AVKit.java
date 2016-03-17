@@ -21,7 +21,11 @@ import com.snicesoft.viewbind.rule.IHolder;
 
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhu zhe
@@ -34,7 +38,7 @@ public class AVKit {
         void loadImg(View v, int loadingResId, int failResId, String url);
     }
 
-    public static class ViewValue {
+    static class ViewValue {
         public DataBind dataBind;
         public Object value;
 
@@ -53,6 +57,25 @@ public class AVKit {
         }
     }
 
+    static class IdField {
+        public int id;
+        public String fieldName;
+
+        public IdField(int id, String fieldName) {
+            this.id = id;
+            this.fieldName = fieldName;
+        }
+
+        public String getFieldName() {
+            return fieldName;
+        }
+
+        public int getId() {
+            return id;
+        }
+    }
+
+    private static Map<String, List<IdField>> classIdFields = new HashMap<String, List<IdField>>();
     private static SimpleDateFormat dateFormat = new SimpleDateFormat();
 
     private static LoadImg loadImg = new LoadImg() {
@@ -89,6 +112,7 @@ public class AVKit {
         }
     }
 
+    @Deprecated
     public static <D> void dataBindTo(D data, ViewFinder finder, String fieldName) {
         if (data == null || finder == null || TextUtils.isEmpty(fieldName))
             return;
@@ -109,6 +133,26 @@ public class AVKit {
         }
     }
 
+    public static <D> void dataBindTo(D data, ViewFinder finder, int id) {
+        if (data == null || finder == null || id == 0)
+            return;
+        try {
+            Class<?> clazz = data.getClass();
+            int i = 0;
+            do {
+                if (i > 0) {
+                    clazz = clazz.getSuperclass();
+                }
+                Field field = getField(clazz, id);
+                field.setAccessible(true);
+                bindValue(data, finder, field);
+                i++;
+            } while (isNotObject(clazz));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private static <D> void dataBind(D data, ViewFinder finder, Class<?> clazz) {
         Field[] dataFields = clazz.getDeclaredFields();
         if (dataFields != null && dataFields.length > 0) {
@@ -117,6 +161,9 @@ public class AVKit {
                     continue;
                 try {
                     field.setAccessible(true);
+                    checkClassName(clazz.getName());
+                    int vid = getVid(finder, field);
+                    classIdFields.get(clazz.getName()).add(new IdField(vid, field.getName()));
                     bindValue(data, finder, field);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -125,21 +172,43 @@ public class AVKit {
         }
     }
 
+    private static void checkClassName(String name) {
+        if (!classIdFields.containsKey(name))
+            classIdFields.put(name, new ArrayList<IdField>());
+        else
+            classIdFields.get(name).clear();
+    }
+
     private static void bindValue(Object data, ViewFinder finder, Field field) throws IllegalAccessException {
         Object value = field.get(data);
         if (value == null)
             return;
         DataBind dataBind = field.getAnnotation(DataBind.class);
         if (dataBind != null) {
-            int vid = dataBind.id();
+            int vid = getVid(dataBind, finder);
+            setValue(finder.findViewById(vid), new ViewValue(value, dataBind));
+        }
+    }
+
+    private static int getVid(ViewFinder finder, Field field) {
+        DataBind dataBind = field.getAnnotation(DataBind.class);
+        if (dataBind != null) {
+            return getVid(dataBind, finder);
+        } else {
+            return 0;
+        }
+    }
+
+    private static int getVid(DataBind dataBind, ViewFinder finder) {
+        int vid = 0;
+        if (dataBind != null) {
+            vid = dataBind.id();
             if (vid == 0) {
                 Context context = finder.getParent().getContext();
                 vid = context.getResources().getIdentifier(dataBind.name(), "id", context.getPackageName());
             }
-            View view = finder.findViewById(vid);
-            if (view != null)
-                setValue(view, new ViewValue(value, dataBind));
         }
+        return vid;
     }
 
     @SuppressWarnings("rawtypes")
@@ -165,7 +234,7 @@ public class AVKit {
     }
 
     @SuppressWarnings("rawtypes")
-    public static <H extends IHolder> void initHolder(Object holder, ViewFinder finder) {
+    public static void initHolder(Object holder, ViewFinder finder) {
         if (holder == null || finder == null)
             return;
         try {
@@ -222,6 +291,8 @@ public class AVKit {
 
     @SuppressWarnings("unchecked")
     private static <T extends View> void setValue(T view, ViewValue viewValue) {
+        if (view == null || viewValue == null)
+            return;
         Object value = viewValue.getValue();
         String p = viewValue.getDataBind().prefix();
         String s = viewValue.getDataBind().suffix();
@@ -294,5 +365,30 @@ public class AVKit {
     }
 
     private AVKit() {
+    }
+
+    private static Field getField(Class clazz, int id) {
+        Field field = null;
+        if (classIdFields.containsKey(clazz.getName())) {
+            for (IdField idField : classIdFields.get(clazz.getName())) {
+                if (idField.getId() == id) {
+                    try {
+                        field = clazz.getDeclaredField(idField.getFieldName());
+                    } catch (NoSuchFieldException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+            }
+        }
+        return field;
+    }
+
+    public static void remove(String className) {
+        classIdFields.remove(className);
+    }
+
+    public static void destory() {
+        classIdFields = null;
     }
 }

@@ -1,10 +1,10 @@
 package com.snicesoft.framework;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
-import com.snicesoft.viewbind.base.AVFragment;
 import com.snicesoft.viewbind.base.AvAppCompatActivity;
 import com.snicesoft.viewbind.rule.IHolder;
 
@@ -12,6 +12,18 @@ import com.snicesoft.viewbind.rule.IHolder;
  * Created by zhuzhe on 15/10/12.
  */
 public class AKActivity<H extends IHolder, D> extends AvAppCompatActivity<H, D> {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ActivityMgr.addActivity(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityMgr.removeActivity(this);
+    }
+
     protected AVFragment<?, ?, ?> curFragment;
 
     public void openFragment(int id, AVFragment<?, ?, ?> targetFragment) {
@@ -47,6 +59,10 @@ public class AKActivity<H extends IHolder, D> extends AvAppCompatActivity<H, D> 
         return true;
     }
 
+    public boolean isActivityResult() {
+        return true;
+    }
+
     @Override
     public void onClick(View v) {
         super.onClick(v);
@@ -56,14 +72,9 @@ public class AKActivity<H extends IHolder, D> extends AvAppCompatActivity<H, D> 
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ActivityMgr.addActivity(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        ActivityMgr.removeActivity(this);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (curFragment != null && isActivityResult())
+            curFragment.onActivityResult(requestCode, resultCode, data);
     }
 }

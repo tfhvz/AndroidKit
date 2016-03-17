@@ -5,10 +5,9 @@ import android.app.Application;
 import com.android.volley.kit.VolleyHttpKit;
 import com.lidroid.xutils.XUtilsBitmapKit;
 import com.snicesoft.basekit.LogKit;
-import com.snicesoft.basekit.net.api.APIConfig;
+import com.snicesoft.basekit.net.api.API;
 import com.snicesoft.basekit.net.api.Config;
 import com.snicesoft.basekit.net.api.ConfigFactory;
-import com.snicesoft.net.api.API;
 
 /**
  * Created by zhuzhe on 15/10/10.
@@ -36,8 +35,8 @@ public class KitApplication extends Application {
         //OkhttpKit.getInstance();
 
         //======初始化API======
-        APIConfig.initTest(Config.Scheme.HTTPS, "192.168.0.122", 0, "userinfo/");
-        APIConfig.initProduct(Config.Scheme.HTTPS, "89.23.78.345", 0, "userinfo/");
-        API.init(ConfigFactory.Mode.TEST);
+        API.getInstance().initTest(Config.Scheme.HTTPS, "192.168.0.122", 0, "userinfo/");
+        API.getInstance().initProduct(Config.Scheme.HTTPS, "89.23.78.345", 0, "userinfo/");
+        API.getInstance().init(ConfigFactory.Mode.TEST);
     }
 }

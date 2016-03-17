@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.internal.$Gson$Types;
+import com.snicesoft.basekit.util.ListUtils;
 import com.snicesoft.viewbind.AVKit;
 import com.snicesoft.viewbind.ViewFinder;
 import com.snicesoft.viewbind.rule.RecyclerHolder;
@@ -19,7 +20,7 @@ import java.util.List;
 /**
  * Created by zhuzhe on 15/9/24.
  */
-public abstract class RecyclerBaseAdapter<VH extends RecyclerHolder, D> extends RecyclerView.Adapter<VH> {
+public class RecyclerBaseAdapter<VH extends RecyclerHolder, D> extends RecyclerView.Adapter<VH> {
     protected int resource;
     private List<D> dataList;
 
@@ -100,10 +101,12 @@ public abstract class RecyclerBaseAdapter<VH extends RecyclerHolder, D> extends 
 
     @Override
     public int getItemCount() {
-        return dataList == null ? 0 : dataList.size();
+        return ListUtils.getSize(this.dataList);
     }
 
-    public abstract void bindHolder(VH holder, D data, int position);
+    public void bindHolder(VH holder, D data, int position) {
+
+    }
 
     VH newHolder(View view) throws Exception {
         Class vClass = $Gson$Types.getRawType(getType(0));

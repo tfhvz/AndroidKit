@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
@@ -17,8 +18,8 @@ import com.snicesoft.basekit.BitmapKit;
 import com.snicesoft.basekit.bitmap.BitmapConfig;
 import com.snicesoft.viewbind.annotation.DataBind;
 import com.snicesoft.viewbind.annotation.Id;
-import com.snicesoft.viewbind.rule.IHolder;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,31 +48,17 @@ public class AVKit {
             this.value = value;
             this.dataBind = dataBind;
         }
-
-        public DataBind getDataBind() {
-            return dataBind;
-        }
-
-        public Object getValue() {
-            return value;
-        }
     }
 
     static class IdField {
         public int id;
+        public Class<?> annoClass;
         public String fieldName;
 
-        public IdField(int id, String fieldName) {
+        public IdField(int id, String fieldName, Class<?> annoClass) {
             this.id = id;
             this.fieldName = fieldName;
-        }
-
-        public String getFieldName() {
-            return fieldName;
-        }
-
-        public int getId() {
-            return id;
+            this.annoClass = annoClass;
         }
     }
 
@@ -86,15 +73,11 @@ public class AVKit {
         }
     };
 
-    /**
-     * 数据绑定到view
-     *
-     * @param <D>
-     * @param <D>
-     * @param data
-     * @param finder
-     */
-    public static <D> void dataBind(D data, ViewFinder finder) {
+    public static void setLoadImg(LoadImg loadImg) {
+        AVKit.loadImg = loadImg;
+    }
+
+    public static void bind(Object data, ViewFinder finder) {
         if (data == null || finder == null)
             return;
         try {
@@ -104,7 +87,7 @@ public class AVKit {
                 if (i > 0) {
                     clazz = clazz.getSuperclass();
                 }
-                dataBind(data, finder, clazz);
+                bind(data, finder, clazz);
                 i++;
             } while (isNotObject(clazz));
         } catch (Exception e) {
@@ -112,28 +95,7 @@ public class AVKit {
         }
     }
 
-    @Deprecated
-    public static <D> void dataBindTo(D data, ViewFinder finder, String fieldName) {
-        if (data == null || finder == null || TextUtils.isEmpty(fieldName))
-            return;
-        try {
-            Class<?> clazz = data.getClass();
-            int i = 0;
-            do {
-                if (i > 0) {
-                    clazz = clazz.getSuperclass();
-                }
-                Field field = clazz.getDeclaredField(fieldName);
-                field.setAccessible(true);
-                bindValue(data, finder, field);
-                i++;
-            } while (isNotObject(clazz));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static <D> void dataBindTo(D data, ViewFinder finder, int id) {
+    public static void bindTo(Object data, ViewFinder finder, int id) {
         if (data == null || finder == null || id == 0)
             return;
         try {
@@ -143,9 +105,12 @@ public class AVKit {
                 if (i > 0) {
                     clazz = clazz.getSuperclass();
                 }
-                Field field = getField(clazz, id);
-                field.setAccessible(true);
-                bindValue(data, finder, field);
+                IdField idField = getIdField(clazz, id, DataBind.class);
+                if (idField != null) {
+                    Field field = clazz.getDeclaredField(idField.fieldName);
+                    field.setAccessible(true);
+                    setViewValue(finder.findViewById(idField.id), new ViewValue(field.get(data), field.getAnnotation(DataBind.class)));
+                }
                 i++;
             } while (isNotObject(clazz));
         } catch (Exception e) {
@@ -153,155 +118,105 @@ public class AVKit {
         }
     }
 
-    private static <D> void dataBind(D data, ViewFinder finder, Class<?> clazz) {
-        Field[] dataFields = clazz.getDeclaredFields();
-        if (dataFields != null && dataFields.length > 0) {
-            for (Field field : dataFields) {
-                if (field.getAnnotation(DataBind.class) == null)
-                    continue;
-                try {
-                    field.setAccessible(true);
-                    checkClassName(clazz.getName());
-                    int vid = getVid(finder, field);
-                    classIdFields.get(clazz.getName()).add(new IdField(vid, field.getName()));
-                    bindValue(data, finder, field);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+    private static int getViewId(Id id, Context context) {
+        int vid = 0;
+        if (id != null) {
+            vid = id.value();
+            if (vid == 0) {
+                vid = context.getResources().getIdentifier(id.name(), "id", context.getPackageName());
             }
         }
+        return vid;
     }
 
-    private static void checkClassName(String name) {
-        if (!classIdFields.containsKey(name))
-            classIdFields.put(name, new ArrayList<IdField>());
-        else
-            classIdFields.get(name).clear();
-    }
-
-    private static void bindValue(Object data, ViewFinder finder, Field field) throws IllegalAccessException {
-        Object value = field.get(data);
-        if (value == null)
-            return;
-        DataBind dataBind = field.getAnnotation(DataBind.class);
-        if (dataBind != null) {
-            int vid = getVid(dataBind, finder);
-            setValue(finder.findViewById(vid), new ViewValue(value, dataBind));
-        }
-    }
-
-    private static int getVid(ViewFinder finder, Field field) {
-        DataBind dataBind = field.getAnnotation(DataBind.class);
-        if (dataBind != null) {
-            return getVid(dataBind, finder);
-        } else {
-            return 0;
-        }
-    }
-
-    private static int getVid(DataBind dataBind, ViewFinder finder) {
+    private static int getViewId(DataBind dataBind, Context context) {
         int vid = 0;
         if (dataBind != null) {
-            vid = dataBind.id();
+            vid = dataBind.value();
             if (vid == 0) {
-                Context context = finder.getParent().getContext();
                 vid = context.getResources().getIdentifier(dataBind.name(), "id", context.getPackageName());
             }
         }
         return vid;
     }
 
-    @SuppressWarnings("rawtypes")
-    public static <H extends IHolder> void initHolder(H holder, ViewFinder finder) {
-        if (holder == null || finder == null)
-            return;
-        try {
-            holder.setParent(finder.getParent());
-            Class<?> clazz = holder.getClass();
-            int i = 0;
-            do {
-                if (i > 0) {
-                    clazz = clazz.getSuperclass();
-                }
-                initHolder(holder, finder, clazz);
-                i++;
-            } while (isNotIHolder(clazz));
-            if (holder != null)
-                holder.initViewParams();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @SuppressWarnings("rawtypes")
-    public static void initHolder(Object holder, ViewFinder finder) {
-        if (holder == null || finder == null)
-            return;
-        try {
-            Class<?> clazz = holder.getClass();
-            int i = 0;
-            do {
-                if (i > 0) {
-                    clazz = clazz.getSuperclass();
-                }
-                initHolder(holder, finder, clazz);
-                i++;
-            } while (isNotObject(clazz));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void initHolder(Object holder, ViewFinder finder, Class<?> clazz) {
-        Field[] fields = clazz.getDeclaredFields();
-        if (fields != null && fields.length > 0)
-            for (Field field : fields) {
+    private static void bind(Object data, ViewFinder finder, Class<?> clazz) {
+        String className = clazz.getName();
+        if (classIdFields.containsKey(className)) {
+            for (IdField idField : classIdFields.get(className)) {
                 try {
+                    Field field = clazz.getDeclaredField(idField.fieldName);
                     field.setAccessible(true);
-                    Id resource = field.getAnnotation(Id.class);
-                    if (resource == null)
-                        continue;
-                    int resId = resource.value();
-                    if (resId == 0) {
-                        Context context = finder.getParent().getContext();
-                        resId = context.getResources().getIdentifier(resource.name(), "id", context.getPackageName());
-                    }
-                    View v = finder.findViewById(resId);
-                    if (v != null) {
-                        if (field.get(holder) == null)
-                            field.set(holder, v);
+                    if (idField.annoClass == DataBind.class) {
+                        DataBind dataBind = field.getAnnotation(DataBind.class);
+                        setViewValue(finder.findViewById(idField.id), new ViewValue(field.get(data), dataBind));
+                    } else if (idField.annoClass == Id.class) {
+                        View v = finder.findViewById(idField.id);
+                        setField(data, field, v);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+        } else {
+            if (!classIdFields.containsKey(className))
+                classIdFields.put(className, new ArrayList<IdField>());
+            Field[] dataFields = clazz.getDeclaredFields();
+            if (dataFields != null && dataFields.length > 0) {
+                for (Field field : dataFields) {
+                    Annotation[] annotations = field.getAnnotations();
+                    if (annotations == null || annotations.length == 0)
+                        continue;
+                    setData(annotations[0], data, field, finder, clazz);
+                }
+            }
+        }
+    }
+
+    private static void setData(Annotation annotation, Object data, Field field, ViewFinder finder, Class<?> clazz) {
+        if (annotation == null)
+            return;
+        try {
+            field.setAccessible(true);
+            IdField idField = null;
+            if (annotation instanceof DataBind) {
+                DataBind dataBind = (DataBind) annotation;
+                int vid = getViewId(dataBind, finder.getContext());
+                idField = new IdField(vid, field.getName(), DataBind.class);
+                setViewValue(finder.findViewById(idField.id), new ViewValue(field.get(data), dataBind));
+            } else if (annotation instanceof Id) {
+                Id id = (Id) annotation;
+                int vid = getViewId(id, finder.getContext());
+                idField = new IdField(vid, field.getName(), Id.class);
+                setField(data, field, finder.findViewById(vid));
+            }
+            classIdFields.get(clazz.getName()).add(idField);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void setField(Object data, Field field, Object value) throws IllegalAccessException {
+        field.set(data, value);
     }
 
     private static boolean isNotObject(Class<?> clazz) {
         return !(clazz.getSuperclass() == Object.class);
     }
 
-    private static boolean isNotIHolder(Class<?> clazz) {
-        return !(clazz.getSuperclass() == IHolder.class);
-    }
-
-    public static void setLoadImg(LoadImg loadImg) {
-        AVKit.loadImg = loadImg;
-    }
-
     @SuppressWarnings("unchecked")
-    private static <T extends View> void setValue(T view, ViewValue viewValue) {
+    private static <T extends View> void setViewValue(T view, ViewValue viewValue) {
         if (view == null || viewValue == null)
             return;
-        Object value = viewValue.getValue();
-        String p = viewValue.getDataBind().prefix();
-        String s = viewValue.getDataBind().suffix();
-        int loading = viewValue.getDataBind().loadingResId();
-        String loadName = viewValue.getDataBind().loadingResName();
-        int fail = viewValue.getDataBind().failResId();
-        String failName = viewValue.getDataBind().failResName();
-        String pattern = viewValue.getDataBind().pattern();
-        switch (viewValue.getDataBind().dataType()) {
+        Object value = viewValue.value;
+        String p = viewValue.dataBind.prefix();
+        String s = viewValue.dataBind.suffix();
+        int loading = viewValue.dataBind.loadingResId();
+        String loadName = viewValue.dataBind.loadingResName();
+        int fail = viewValue.dataBind.failResId();
+        String failName = viewValue.dataBind.failResName();
+        String pattern = viewValue.dataBind.pattern();
+        switch (viewValue.dataBind.dataType()) {
             case STRING:
                 TextView tv = (TextView) view;
                 if (TextUtils.isEmpty(pattern)) {
@@ -350,11 +265,13 @@ public class AVKit {
                 try {
                     if (value instanceof Adapter && view instanceof AdapterView) {
                         ((AdapterView<Adapter>) view).setAdapter((Adapter) value);
-                    }
-                    if (value instanceof PagerAdapter && view instanceof ViewPager) {
+                    } else if (value instanceof PagerAdapter && view instanceof ViewPager) {
                         ((ViewPager) view).setAdapter((PagerAdapter) value);
+                    } else if (value instanceof RecyclerView.Adapter && view instanceof RecyclerView) {
+                        ((RecyclerView) view).setAdapter((RecyclerView.Adapter) value);
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 break;
             case NULL:
@@ -362,26 +279,21 @@ public class AVKit {
             default:
                 break;
         }
+        viewValue = null;
     }
 
     private AVKit() {
     }
 
-    private static Field getField(Class clazz, int id) {
-        Field field = null;
+    private static IdField getIdField(Class clazz, int id, Class<?> annoClass) {
         if (classIdFields.containsKey(clazz.getName())) {
             for (IdField idField : classIdFields.get(clazz.getName())) {
-                if (idField.getId() == id) {
-                    try {
-                        field = clazz.getDeclaredField(idField.getFieldName());
-                    } catch (NoSuchFieldException e) {
-                        e.printStackTrace();
-                    }
-                    break;
+                if (idField.id == id && idField.annoClass == annoClass) {
+                    return idField;
                 }
             }
         }
-        return field;
+        return null;
     }
 
     public static void remove(String className) {

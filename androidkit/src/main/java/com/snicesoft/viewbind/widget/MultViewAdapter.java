@@ -3,10 +3,8 @@ package com.snicesoft.viewbind.widget;
 import android.content.Context;
 import android.view.View;
 
-import com.snicesoft.viewbind.rule.IHolder;
-
 @SuppressWarnings("rawtypes")
-public abstract class MultViewAdapter<H extends IHolder, D> extends BaseAdapter<H, D> {
+public abstract class MultViewAdapter<D> extends BaseAdapter<D> {
     public MultViewAdapter(Context context) {
         super(context);
     }

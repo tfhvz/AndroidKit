@@ -2,9 +2,16 @@ package com.snicesoft.viewbind.base;
 
 public interface IAv {
 
-    public void dataBindAll();
+    void bindAll();
 
-    public void dataBindTo(int id);
+    void bindTo(int id);
 
-    public int layout();
+    void bind(Object holder);
+
+    int layout();
+
+    void onLoaded();
+
+    void loadNetData();
+
 }

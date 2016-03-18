@@ -7,9 +7,11 @@ import com.snicesoft.viewbind.AVKit;
 import com.snicesoft.viewbind.ViewFinder;
 
 public class RecyclerHolder extends RecyclerView.ViewHolder {
+    public ViewFinder finder;
 
-	public RecyclerHolder(View itemView) {
-		super(itemView);
-		AVKit.initHolder(this, new ViewFinder(itemView));
-	}
+    public RecyclerHolder(View itemView) {
+        super(itemView);
+        finder = new ViewFinder(itemView);
+        AVKit.bind(this, finder);
+    }
 }

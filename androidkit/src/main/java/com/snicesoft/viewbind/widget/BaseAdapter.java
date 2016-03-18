@@ -5,21 +5,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 
-import com.google.gson.internal.$Gson$Types;
 import com.snicesoft.basekit.util.ListUtils;
 import com.snicesoft.viewbind.AVKit;
 import com.snicesoft.viewbind.ViewFinder;
-import com.snicesoft.viewbind.rule.IHolder;
 
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @SuppressWarnings("rawtypes")
-abstract class BaseAdapter<H extends IHolder, D> extends android.widget.BaseAdapter {
+abstract class BaseAdapter<D> extends android.widget.BaseAdapter {
     private Context context;
     protected int resource;
     private List<D> dataList = new ArrayList<D>();
@@ -96,35 +91,22 @@ abstract class BaseAdapter<H extends IHolder, D> extends android.widget.BaseAdap
     @Override
     public final View getView(int position, View convertView, ViewGroup parent) {
         D data = getItem(position);
-        H holder = null;
+        ViewFinder holder = null;
         if (convertView == null) {
-            try {
-                holder = newHolder();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            holder = new ViewFinder(convertView);
             convertView = newView(position);
-            if (holder != null) {
-                holder.setParent(convertView);
-                AVKit.initHolder(holder, new ViewFinder(convertView));
-                convertView.setTag(holder);
-            }
+            convertView.setTag(holder);
         } else {
-            holder = (H) convertView.getTag();
+            holder = (ViewFinder) convertView.getTag();
         }
-
         if (data != null) {
-            AVKit.dataBind(data, new ViewFinder(convertView));
-        }
-        if (holder != null) {
-            holder.setTag(data);
-            holder.setPosition(position);
-            if (holder.getPosition() != -1) {
-                holder.initViewParams();
-            }
+            AVKit.bind(data, holder);
+            dataBind(position, data, holder);
         }
         return convertView;
     }
+
+    protected abstract void dataBind(int position, D data, ViewFinder holder);
 
     private AbsListView absListView;
 
@@ -136,11 +118,15 @@ abstract class BaseAdapter<H extends IHolder, D> extends android.widget.BaseAdap
         if (absListView == null || position == -1)
             return;
         try {
-            View mView = absListView.getChildAt(position - absListView.getFirstVisiblePosition());//获取指定itemIndex在屏幕中的view
+            int index = position - absListView.getFirstVisiblePosition();
+            View mView = absListView.getChildAt(index);//获取指定itemIndex在屏幕中的view
             if (mView == null || mView.getTag() == null)
                 return;
-            H holder = (H) mView.getTag();
-            holder.initViewParams();
+            D data = getItem(index);
+            if (data != null) {
+                AVKit.bind(data, (ViewFinder) mView.getTag());
+                dataBind(index, data, (ViewFinder) mView.getTag());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -151,26 +137,5 @@ abstract class BaseAdapter<H extends IHolder, D> extends android.widget.BaseAdap
     @Override
     public long getItemId(int position) {
         return 0;
-    }
-
-    H newHolder() throws Exception {
-        Class hClass = $Gson$Types.getRawType(getType(0));
-        if (hClass == IHolder.class)
-            return null;
-        if (hClass.getName().contains(getClass().getName() + "$")) {
-            if (Modifier.isStatic(hClass.getModifiers()))
-                return (H) hClass.newInstance();
-            return (H) hClass.getConstructors()[0].newInstance(this);
-        }
-        return (H) hClass.newInstance();
-    }
-
-    Type getType(int index) {
-        Type superclass = getClass().getGenericSuperclass();
-        if (superclass instanceof Class) {
-            throw new RuntimeException("Missing type parameter.");
-        }
-        ParameterizedType parameterized = (ParameterizedType) superclass;
-        return $Gson$Types.canonicalize(parameterized.getActualTypeArguments()[index]);
     }
 }

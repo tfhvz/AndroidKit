@@ -11,7 +11,6 @@ import com.google.gson.internal.$Gson$Types;
 import com.snicesoft.viewbind.AVKit;
 import com.snicesoft.viewbind.ViewFinder;
 import com.snicesoft.viewbind.base.IAv;
-import com.snicesoft.viewbind.rule.IHolder;
 import com.snicesoft.viewbind.utils.AutoUtils;
 import com.snicesoft.viewbind.utils.LayoutUtils;
 
@@ -20,20 +19,24 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class AVFragment<H extends IHolder, D, FA extends FragmentActivity> extends Fragment
+public abstract class AVFragment<HD, FA extends FragmentActivity> extends Fragment
         implements IAv, View.OnClickListener {
     private ViewFinder finder;
-    protected D _data;
-    protected H _holder;
+    protected HD _hd;
 
     @Override
-    public final void dataBindAll() {
-        AVKit.dataBind(_data, finder);
+    public final void bindAll() {
+        AVKit.bind(_hd, finder);
     }
 
     @Override
-    public void dataBindTo(int id) {
-        AVKit.dataBindTo(_data, finder, id);
+    public final void bindTo(int id) {
+        AVKit.bindTo(_hd, finder, id);
+    }
+
+    @Override
+    public final void bind(Object holder) {
+        AVKit.bind(holder, finder);
     }
 
     @Override
@@ -48,47 +51,38 @@ public class AVFragment<H extends IHolder, D, FA extends FragmentActivity> exten
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(LayoutUtils.getLayoutId(fa(), getClass()), null);
+        finder = new ViewFinder(root);
         try {
-            _holder = newHolder();
-            _data = newData();
+            _hd = newHD();
             AutoUtils.loadContext(fa(), getClass(), this);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        finder = new ViewFinder(root);
-        AVKit.initHolder(_holder, finder);
-        dataBindAll();
+        bindAll();
+        onLoaded();
+        loadNetData();
         return root;
     }
 
-    D newData() throws Exception {
-        Class dClass = $Gson$Types.getRawType(getType(1));
-        if (dClass == Void.class)
+    HD newHD() throws Exception {
+        Type type = getType(0);
+        if (type == null)
             return null;
-        if (dClass.getName().contains(getClass().getName() + "$")) {
-            if (Modifier.isStatic(dClass.getModifiers()))
-                return (D) dClass.newInstance();
-            return (D) dClass.getConstructors()[0].newInstance(this);
-        }
-        return (D) dClass.newInstance();
-    }
-
-    H newHolder() throws Exception {
-        Class hClass = $Gson$Types.getRawType(getType(0));
-        if (hClass == IHolder.class)
+        Class hClass = $Gson$Types.getRawType(type);
+        if (hClass == Void.class)
             return null;
         if (hClass.getName().contains(getClass().getName() + "$")) {
             if (Modifier.isStatic(hClass.getModifiers()))
-                return (H) hClass.newInstance();
-            return (H) hClass.getConstructors()[0].newInstance(this);
+                return (HD) hClass.newInstance();
+            return (HD) hClass.getConstructors()[0].newInstance(this);
         }
-        return (H) hClass.newInstance();
+        return (HD) hClass.newInstance();
     }
 
     Type getType(int index) {
         Type superclass = getClass().getGenericSuperclass();
         if (superclass instanceof Class) {
-            throw new RuntimeException("Missing type parameter.");
+            return null;
         }
         ParameterizedType parameterized = (ParameterizedType) superclass;
         return $Gson$Types.canonicalize(parameterized.getActualTypeArguments()[index]);
@@ -98,5 +92,12 @@ public class AVFragment<H extends IHolder, D, FA extends FragmentActivity> exten
     public void onClick(View v) {
         if (v == null)
             return;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        _hd = null;
+        finder = null;
     }
 }

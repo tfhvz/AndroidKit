@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import com.google.gson.internal.$Gson$Types;
 import com.snicesoft.basekit.util.ListUtils;
 import com.snicesoft.viewbind.AVKit;
-import com.snicesoft.viewbind.ViewFinder;
 import com.snicesoft.viewbind.rule.RecyclerHolder;
 
 import java.lang.reflect.Modifier;
@@ -89,7 +88,7 @@ public class RecyclerBaseAdapter<VH extends RecyclerHolder, D> extends RecyclerV
     public final void onBindViewHolder(VH holder, int position) {
         D data = getItem(position);
         if (data != null) {
-            AVKit.dataBind(data, new ViewFinder(holder.itemView));
+            AVKit.bind(data, holder.finder);
         }
         bindHolder(holder, data, position);
     }

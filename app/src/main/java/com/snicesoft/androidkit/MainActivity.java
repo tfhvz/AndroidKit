@@ -12,22 +12,23 @@ import com.snicesoft.viewbind.annotation.DataBind;
 import com.snicesoft.viewbind.annotation.DataType;
 import com.snicesoft.viewbind.annotation.Id;
 import com.snicesoft.viewbind.annotation.Layout;
-import com.snicesoft.viewbind.rule.IHolder;
 
 @Layout(name = "activity_main")
-public class MainActivity extends AKActivity<MainActivity.Holder, MainActivity.Data> {
+public class MainActivity extends AKActivity<MainActivity.Data> {
 
-    public class Holder extends IHolder {
-        @Id(name = "btnPlugin")
-        Button btnPlugin;
+    @Override
+    public void onLoaded() {
+        LogKit.d("-==onLoaded");
+    }
 
-        @Override
-        public void initViewParams() {
-            LogKit.d("test:" + btnPlugin.toString());
-        }
+    @Override
+    public void loadNetData() {
+        LogKit.d("-==NetData");
     }
 
     public class Data {
+        @Id(name = "btnPlugin")
+        Button btnPlugin;
         @DataBind(name = "btnPlugin")
         String name = "zenme是大写";
         @DataBind(dataType = DataType.IMG, name = "imageView", failResName = "ic_launcher")
@@ -42,8 +43,9 @@ public class MainActivity extends AKActivity<MainActivity.Holder, MainActivity.D
         super.onClick(v);
         switch (v.getId()) {
             case R.id.btnPlugin:
-                _data.name = "dsfdsf";
-                dataBindTo(R.id.btnPlugin);
+                _hd.name = "dsfdsf";
+                bindTo(R.id.btnPlugin);
+                LogKit.d("==hd:" + _hd.btnPlugin);
 //                HttpRequest request = new HttpRequest("http://192.168.10.161:8080/web-weiding/charityRecord/love");
 ////                request.addFile("file", new File("/storage/sdcard0/DCIM/Camera/IMG_20151110_164815.jpg"));
 //                HttpKit.getInstance().get(request, new HttpCallBack<Result<String>>() {

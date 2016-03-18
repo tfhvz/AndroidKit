@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.snicesoft.basekit.BitmapKit;
 import com.snicesoft.basekit.bitmap.BitmapConfig;
+import com.snicesoft.basekit.util.ListUtils;
 import com.snicesoft.viewbind.annotation.DataBind;
 import com.snicesoft.viewbind.annotation.Id;
 
@@ -24,9 +25,7 @@ import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -144,7 +143,11 @@ public class AVKit {
     private static void bind(Object data, ViewFinder finder, Class<?> clazz) {
         String className = clazz.getName();
         if (classIdFields.containsKey(className)) {
+            if (ListUtils.isEmpty(classIdFields.get(className)))
+                return;
             for (IdField idField : classIdFields.get(className)) {
+                if (idField == null)
+                    continue;
                 try {
                     Field field = clazz.getDeclaredField(idField.fieldName);
                     field.setAccessible(true);
@@ -202,7 +205,7 @@ public class AVKit {
     }
 
     private static boolean isNotObject(Class<?> clazz) {
-        return !(clazz.getSuperclass() == Object.class);
+        return !(clazz.getSuperclass() == Object.class) || !(clazz.getSuperclass() == RecyclerView.ViewHolder.class);
     }
 
     @SuppressWarnings("unchecked")

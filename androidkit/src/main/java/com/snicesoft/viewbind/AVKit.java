@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author zhu zhe
@@ -62,7 +63,7 @@ public class AVKit {
         }
     }
 
-    private static Map<String, List<IdField>> classIdFields = new HashMap<String, List<IdField>>();
+    private static ConcurrentHashMap<String, List<IdField>> classIdFields = new ConcurrentHashMap<String, List<IdField>>();
     private static SimpleDateFormat dateFormat = new SimpleDateFormat();
 
     private static LoadImg loadImg = new LoadImg() {

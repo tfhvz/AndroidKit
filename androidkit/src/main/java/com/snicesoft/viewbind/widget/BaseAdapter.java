@@ -93,8 +93,8 @@ abstract class BaseAdapter<D> extends android.widget.BaseAdapter {
         D data = getItem(position);
         ViewFinder holder = null;
         if (convertView == null) {
-            holder = new ViewFinder(convertView);
             convertView = newView(position);
+            holder = new ViewFinder(convertView);
             convertView.setTag(holder);
         } else {
             holder = (ViewFinder) convertView.getTag();

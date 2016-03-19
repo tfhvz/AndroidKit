@@ -19,6 +19,8 @@ import com.snicesoft.basekit.bitmap.BitmapConfig;
 import com.snicesoft.basekit.util.ListUtils;
 import com.snicesoft.viewbind.annotation.DataBind;
 import com.snicesoft.viewbind.annotation.Id;
+import com.snicesoft.viewbind.rule.RecyclerHolder;
+import com.snicesoft.viewbind.utils.AutoUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -37,17 +39,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AVKit {
     public interface LoadImg {
         void loadImg(View v, int loadingResId, int failResId, String url);
-    }
-
-    static class ViewValue {
-        public DataBind dataBind;
-        public Object value;
-
-        public ViewValue(Object value, DataBind dataBind) {
-            super();
-            this.value = value;
-            this.dataBind = dataBind;
-        }
     }
 
     static class IdField {
@@ -109,7 +100,7 @@ public class AVKit {
                 if (idField != null) {
                     Field field = clazz.getDeclaredField(idField.fieldName);
                     field.setAccessible(true);
-                    setViewValue(finder.findViewById(idField.id), new ViewValue(field.get(data), field.getAnnotation(DataBind.class)));
+                    setViewValue(finder.findViewById(idField.id), field.get(data), field.getAnnotation(DataBind.class));
                 }
                 i++;
             } while (isNotObject(clazz));
@@ -153,10 +144,12 @@ public class AVKit {
                     field.setAccessible(true);
                     if (idField.annoClass == DataBind.class) {
                         DataBind dataBind = field.getAnnotation(DataBind.class);
-                        setViewValue(finder.findViewById(idField.id), new ViewValue(field.get(data), dataBind));
+                        setViewValue(finder.findViewById(idField.id), field.get(data), dataBind);
                     } else if (idField.annoClass == Id.class) {
                         View v = finder.findViewById(idField.id);
                         setField(data, field, v);
+                    } else if (idField.annoClass == com.snicesoft.viewbind.annotation.Context.class) {
+                        AutoUtils.loadContext(finder.getContext(), field, data);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -187,12 +180,15 @@ public class AVKit {
                 DataBind dataBind = (DataBind) annotation;
                 int vid = getViewId(dataBind, finder.getContext());
                 idField = new IdField(vid, field.getName(), DataBind.class);
-                setViewValue(finder.findViewById(idField.id), new ViewValue(field.get(data), dataBind));
+                setViewValue(finder.findViewById(idField.id), field.get(data), dataBind);
             } else if (annotation instanceof Id) {
                 Id id = (Id) annotation;
                 int vid = getViewId(id, finder.getContext());
                 idField = new IdField(vid, field.getName(), Id.class);
                 setField(data, field, finder.findViewById(vid));
+            } else if (annotation instanceof com.snicesoft.viewbind.annotation.Context) {
+                idField = new IdField(0, field.getName(), com.snicesoft.viewbind.annotation.Context.class);
+                AutoUtils.loadContext(finder.getContext(), field, data);
             }
             classIdFields.get(clazz.getName()).add(idField);
         } catch (Exception e) {
@@ -205,22 +201,21 @@ public class AVKit {
     }
 
     private static boolean isNotObject(Class<?> clazz) {
-        return !(clazz.getSuperclass() == Object.class) || !(clazz.getSuperclass() == RecyclerView.ViewHolder.class);
+        return !(clazz.getSuperclass() == Object.class || clazz.getSuperclass() == RecyclerHolder.class);
     }
 
     @SuppressWarnings("unchecked")
-    private static <T extends View> void setViewValue(T view, ViewValue viewValue) {
-        if (view == null || viewValue == null)
+    private static <T extends View> void setViewValue(T view, Object value, DataBind dataBind) {
+        if (view == null || value == null || dataBind == null)
             return;
-        Object value = viewValue.value;
-        String p = viewValue.dataBind.prefix();
-        String s = viewValue.dataBind.suffix();
-        int loading = viewValue.dataBind.loadingResId();
-        String loadName = viewValue.dataBind.loadingResName();
-        int fail = viewValue.dataBind.failResId();
-        String failName = viewValue.dataBind.failResName();
-        String pattern = viewValue.dataBind.pattern();
-        switch (viewValue.dataBind.dataType()) {
+        String p = dataBind.prefix();
+        String s = dataBind.suffix();
+        int loading = dataBind.loadingResId();
+        String loadName = dataBind.loadingResName();
+        int fail = dataBind.failResId();
+        String failName = dataBind.failResName();
+        String pattern = dataBind.pattern();
+        switch (dataBind.dataType()) {
             case STRING:
                 TextView tv = (TextView) view;
                 if (TextUtils.isEmpty(pattern)) {
@@ -283,7 +278,6 @@ public class AVKit {
             default:
                 break;
         }
-        viewValue = null;
     }
 
     private AVKit() {

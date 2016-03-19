@@ -2,10 +2,10 @@ package com.snicesoft.viewbind;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.SparseArray;
 import android.view.View;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.snicesoft.viewbind.utils.ViewHelper;
 
 /**
  * @author zhu zhe
@@ -15,7 +15,8 @@ import java.util.Map;
 public class ViewFinder {
     private View parent;
     private Context context;
-    private Map<Integer, View> viewMap = new HashMap<Integer, View>();
+    private ViewHelper viewHelper = new ViewHelper(this);
+    private SparseArray<View> views = new SparseArray<View>();
 
     public ViewFinder(View view) {
         this.parent = view;
@@ -38,8 +39,16 @@ public class ViewFinder {
     public View findViewById(int vId) {
         if (vId == 0)
             return null;
-        if (!viewMap.containsKey(vId))
-            viewMap.put(vId, parent.findViewById(vId));
-        return viewMap.get(vId);
+        if (views.get(vId) == null)
+            views.put(vId, parent.findViewById(vId));
+        return views.get(vId);
+    }
+
+    public <V extends View> V findViewById(int vId, Class<V> clazz) {
+        return (V) findViewById(vId);
+    }
+
+    public ViewHelper getViewHelper() {
+        return viewHelper;
     }
 }

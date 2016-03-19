@@ -11,7 +11,6 @@ import com.google.gson.internal.$Gson$Types;
 import com.snicesoft.viewbind.AVKit;
 import com.snicesoft.viewbind.ViewFinder;
 import com.snicesoft.viewbind.base.IAv;
-import com.snicesoft.viewbind.utils.AutoUtils;
 import com.snicesoft.viewbind.utils.LayoutUtils;
 
 import java.lang.reflect.Modifier;
@@ -26,7 +25,7 @@ public abstract class AVFragment<HD, FA extends FragmentActivity> extends Fragme
 
     @Override
     public final void bindAll() {
-        AVKit.bind(_hd, finder);
+        bind(_hd);
     }
 
     @Override
@@ -54,7 +53,7 @@ public abstract class AVFragment<HD, FA extends FragmentActivity> extends Fragme
         finder = new ViewFinder(root);
         try {
             _hd = newHD();
-            AutoUtils.loadContext(fa(), getClass(), this);
+            bind(this);
         } catch (Exception e) {
             e.printStackTrace();
         }

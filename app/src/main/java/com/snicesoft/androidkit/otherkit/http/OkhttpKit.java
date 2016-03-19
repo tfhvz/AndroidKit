@@ -9,6 +9,7 @@ import com.snicesoft.basekit.http.ContentType;
 import com.snicesoft.basekit.http.HttpCallBack;
 import com.snicesoft.basekit.http.HttpError;
 import com.snicesoft.basekit.http.HttpRequest;
+import com.snicesoft.basekit.util.GsonUtils;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
@@ -38,7 +39,7 @@ public class OkhttpKit extends HttpKit {
         client = new OkHttpClient();
         client.setConnectTimeout(30, TimeUnit.SECONDS);
         mHandler = new Handler(Looper.getMainLooper());
-        mGson = new Gson();
+        mGson = GsonUtils.getGson();
         requestMap = new HashMap<HttpRequest, Call>();
     }
 

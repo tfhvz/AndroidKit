@@ -1,7 +1,6 @@
 package com.snicesoft.framework;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
@@ -11,17 +10,6 @@ import com.snicesoft.viewbind.base.AvAppCompatActivity;
  * Created by zhuzhe on 15/10/12.
  */
 public abstract class AKActivity<HD> extends AvAppCompatActivity<HD> {
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ActivityMgr.addActivity(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        ActivityMgr.removeActivity(this);
-    }
 
     protected AVFragment<?, ?> curFragment;
 

@@ -10,7 +10,6 @@ import com.snicesoft.viewbind.AVKit;
 import com.snicesoft.viewbind.ViewFinder;
 import com.snicesoft.viewbind.base.IAv;
 import com.snicesoft.viewbind.base.Proxy;
-import com.snicesoft.viewbind.utils.AutoUtils;
 import com.snicesoft.viewbind.utils.LayoutUtils;
 
 import java.lang.reflect.Modifier;
@@ -28,7 +27,7 @@ public abstract class AVActivity<HD> extends Activity implements IAv, OnClickLis
 
     @Override
     public final void bindAll() {
-        AVKit.bind(_hd, finder);
+        bind(_hd);
     }
 
     @Override
@@ -53,7 +52,7 @@ public abstract class AVActivity<HD> extends Activity implements IAv, OnClickLis
         finder = new ViewFinder(this);
         try {
             _hd = newHD();
-            AutoUtils.loadContext(this, getClass(), this);
+            bind(this);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -35,7 +35,7 @@ public class RecyclerBaseAdapter<VH extends RecyclerHolder, D> extends RecyclerV
 
     public final void add(int position, D d) {
         this.dataList.add(position, d);
-        this.notifyDataSetChanged();
+        this.notifyItemInserted(position);
     }
 
     public final void addAll(Collection<D> collection) {
@@ -59,7 +59,16 @@ public class RecyclerBaseAdapter<VH extends RecyclerHolder, D> extends RecyclerV
 
     public final void remove(int location) {
         this.dataList.remove(location);
-        this.notifyDataSetChanged();
+        this.notifyItemRemoved(location);
+    }
+
+    public final void remove(D d) {
+        this.dataList.remove(d);
+        notifyDataSetChanged();
+    }
+
+    public boolean contains(D d) {
+        return this.dataList.contains(d);
     }
 
     public final void setDataList(Collection<D> dataList) {

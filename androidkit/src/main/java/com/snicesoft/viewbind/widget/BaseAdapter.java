@@ -62,6 +62,15 @@ abstract class BaseAdapter<D> extends android.widget.BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public final void remove(D d) {
+        this.dataList.remove(d);
+        notifyDataSetChanged();
+    }
+
+    public boolean contains(D d) {
+        return this.dataList.contains(d);
+    }
+
     public final void setDataList(Collection<D> dataList) {
         this.dataList.clear();
         this.dataList.addAll(dataList);

@@ -23,6 +23,7 @@ import com.snicesoft.basekit.HttpKit;
 import com.snicesoft.basekit.http.HttpCallBack;
 import com.snicesoft.basekit.http.HttpError;
 import com.snicesoft.basekit.http.HttpRequest;
+import com.snicesoft.basekit.util.GsonUtils;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -44,7 +45,7 @@ public class VolleyHttpKit extends HttpKit {
         volleyQueue = Volley.newRequestQueue(context);
         requestMap = new HashMap<HttpRequest, Request>();
         timeoutTimerMap = new HashMap<HttpCallBack, TimeoutTimer>();
-        mGson = new Gson();
+        mGson = GsonUtils.getGson();
     }
 
     public synchronized static HttpKit getInstance(Context context) {

@@ -164,7 +164,9 @@ public class AVKit {
                     Annotation[] annotations = field.getAnnotations();
                     if (annotations == null || annotations.length == 0)
                         continue;
-                    setData(annotations[0], data, field, finder, clazz);
+                    for (Annotation an : annotations) {
+                        setData(an, data, field, finder, clazz);
+                    }
                 }
             }
         }
@@ -189,6 +191,8 @@ public class AVKit {
             } else if (annotation instanceof com.snicesoft.viewbind.annotation.Context) {
                 idField = new IdField(0, field.getName(), com.snicesoft.viewbind.annotation.Context.class);
                 AutoUtils.loadContext(finder.getContext(), field, data);
+            } else {
+                return;
             }
             classIdFields.get(clazz.getName()).add(idField);
         } catch (Exception e) {

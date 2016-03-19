@@ -23,7 +23,7 @@ import com.snicesoft.basekit.HttpKit;
 import com.snicesoft.basekit.http.HttpCallBack;
 import com.snicesoft.basekit.http.HttpError;
 import com.snicesoft.basekit.http.HttpRequest;
-import com.snicesoft.basekit.util.GsonUtils;
+import com.snicesoft.basekit.gson.GsonUtils;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;

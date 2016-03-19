@@ -9,7 +9,7 @@ import com.snicesoft.basekit.http.ContentType;
 import com.snicesoft.basekit.http.HttpCallBack;
 import com.snicesoft.basekit.http.HttpError;
 import com.snicesoft.basekit.http.HttpRequest;
-import com.snicesoft.basekit.util.GsonUtils;
+import com.snicesoft.basekit.gson.GsonUtils;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;

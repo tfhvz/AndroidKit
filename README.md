@@ -1,5 +1,5 @@
 # AndroidKit
-我的android studio项目
+基于android studio的android应用快速开发框架
 ## 【1】快速使用
 ### gradle添加
 compile 'com.snicesoft:androidkit:1.6.0'

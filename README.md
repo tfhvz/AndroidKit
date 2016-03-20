@@ -1,8 +1,8 @@
 # AndroidKit
-我的android studio项目
+基于android studio的android应用快速开发框架
 ## 【1】快速使用
 ### gradle添加
-compile 'com.snicesoft:library:1.0.0'
+compile 'com.snicesoft:androidkit:1.6.0'
 ### Application
 ```java
 public class KitApplication extends Application {
@@ -27,9 +27,9 @@ public class KitApplication extends Application {
         //OkhttpKit.getInstance();
 
         //======初始化API======
-        APIConfig.initTest(Config.Scheme.HTTPS, "192.168.0.122", 0, "userinfo/");
-        APIConfig.initProduct(Config.Scheme.HTTPS, "89.23.78.345", 0, "userinfo/");
-        API.init(ConfigFactory.Mode.TEST);
+        API.getInstance().initTest(Config.Scheme.HTTPS, "192.168.0.122", 0, "userinfo/");
+        API.getInstance().initProduct(Config.Scheme.HTTPS, "89.23.78.345", 0, "userinfo/");
+        API.getInstance().init(ConfigFactory.Mode.TEST);
     }
 }
 ```
@@ -37,21 +37,10 @@ public class KitApplication extends Application {
 #### ....net.api
 API.java
 ```java
-public final class API {
-    private static Config config;
-
+public final class APIADDRESS {
     public final static class User {
-        public static String USER;
-        public static String USER_LOGIN;
-    }
-
-    private API() {
-    }
-
-    public static void init(ConfigFactory.Mode mode) {
-        config = ConfigFactory.create(mode);
-        User.USER = config.baseUrl() + "mobile/user";
-        User.USER_LOGIN = config.baseUrl() + "mobile/user/login";
+        public final static String USER = API.config.baseUrl()+"mobile/user";
+        public final static String USER_LOGIN =  API.config.baseUrl()+"mobile/user/login";
     }
 }
 ```

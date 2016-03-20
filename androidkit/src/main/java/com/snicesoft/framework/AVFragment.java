@@ -49,7 +49,10 @@ public abstract class AVFragment<HD, FA extends FragmentActivity> extends Fragme
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(LayoutUtils.getLayoutId(fa(), getClass()), null);
+        int layout = layout();
+        if (layout == 0)
+            layout = LayoutUtils.getLayoutId(fa(), getClass());
+        View root = inflater.inflate(layout, null);
         finder = new ViewFinder(root);
         try {
             _hd = newHD();

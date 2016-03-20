@@ -118,8 +118,6 @@ public class RecyclerBaseAdapter<VH extends RecyclerHolder, D> extends RecyclerV
 
     VH newHolder(View view) throws Exception {
         Class vClass = $Gson$Types.getRawType(getType(0));
-        if (vClass == RecyclerHolder.class)
-            return null;
         if (vClass.getName().contains(getClass().getName() + "$")) {
             if (Modifier.isStatic(vClass.getModifiers()))
                 return (VH) vClass.newInstance();

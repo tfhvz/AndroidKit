@@ -63,6 +63,14 @@ public abstract class AVFragment<HD, FA extends FragmentActivity> extends Fragme
         return root;
     }
 
+    public ViewFinder getFinder() {
+        return finder;
+    }
+
+    protected View getRoot() {
+        return finder.getParent();
+    }
+
     HD newHD() throws Exception {
         Type type = getType(0);
         if (type == null)

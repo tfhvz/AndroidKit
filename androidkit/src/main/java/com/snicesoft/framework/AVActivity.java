@@ -52,7 +52,6 @@ public abstract class AVActivity<HD> extends Activity implements IAv, OnClickLis
         finder = new ViewFinder(this);
         try {
             _hd = newHD();
-            bind(this);
         } catch (Exception e) {
             e.printStackTrace();
         }

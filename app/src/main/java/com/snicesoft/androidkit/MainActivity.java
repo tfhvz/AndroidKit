@@ -9,21 +9,21 @@ import com.snicesoft.framework.AKActivity;
 import com.snicesoft.net.controller.TestController;
 import com.snicesoft.viewbind.annotation.Context;
 import com.snicesoft.viewbind.annotation.DataBind;
-import com.snicesoft.viewbind.annotation.DataType;
 import com.snicesoft.viewbind.annotation.Id;
 import com.snicesoft.viewbind.annotation.Layout;
+import com.snicesoft.viewbind.bind.DataType;
 
 @Layout(name = "activity_main")
 public class MainActivity extends AKActivity<MainActivity.Data> {
 
     @Override
     public void onLoaded() {
-        LogKit.d("-==onLoaded");
+        LogKit.d("==onLoaded");
     }
 
     @Override
     public void loadNetData() {
-        LogKit.d("-==NetData");
+        LogKit.d("==NetData");
     }
 
     public class Data {
@@ -32,7 +32,11 @@ public class MainActivity extends AKActivity<MainActivity.Data> {
         @DataBind(name = "btnPlugin")
         String name = "zenme是大写";
         @DataBind(dataType = DataType.IMG, name = "imageView", failResName = "ic_launcher")
-        String img = "";
+        String img = "http://h.hiphotos.baidu.com/zhidao/pic/item/eac4b74543a9822628850ccc8c82b9014b90eb91.jpg";
+        @DataBind(name = "ratingBar", dataType = DataType.RATING)
+        float rating = 3;
+        @DataBind(name = "seekBar", dataType = DataType.PROGRESS)
+        int progress = 30;
     }
 
     @Context

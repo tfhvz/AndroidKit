@@ -1,5 +1,7 @@
 package com.snicesoft.viewbind.annotation;
 
+import com.snicesoft.viewbind.bind.DataType;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -17,7 +19,7 @@ public @interface DataBind {
 
     public String name() default "";
 
-    public DataType dataType() default DataType.STRING;
+    public DataType dataType() default DataType.TEXT;
 
     public int loadingResId() default 0;
 

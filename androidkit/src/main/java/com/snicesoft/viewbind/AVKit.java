@@ -2,31 +2,22 @@ package com.snicesoft.viewbind;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.Adapter;
-import android.widget.AdapterView;
-import android.widget.Checkable;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.snicesoft.basekit.BitmapKit;
 import com.snicesoft.basekit.bitmap.BitmapConfig;
 import com.snicesoft.basekit.util.ListUtils;
 import com.snicesoft.viewbind.annotation.DataBind;
 import com.snicesoft.viewbind.annotation.Id;
+import com.snicesoft.viewbind.bind.IBindBuilder;
+import com.snicesoft.viewbind.bind.BindImg;
+import com.snicesoft.viewbind.bind.IBind;
 import com.snicesoft.viewbind.rule.RecyclerHolder;
 import com.snicesoft.viewbind.utils.AutoUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -54,8 +45,6 @@ public class AVKit {
     }
 
     private static ConcurrentHashMap<String, List<IdField>> classIdFields = new ConcurrentHashMap<String, List<IdField>>();
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat();
-
     private static LoadImg loadImg = new LoadImg() {
         @Override
         public void loadImg(View v, int loadingResId, int failResId, String url) {
@@ -100,7 +89,8 @@ public class AVKit {
                 if (idField != null) {
                     Field field = clazz.getDeclaredField(idField.fieldName);
                     field.setAccessible(true);
-                    setViewValue(finder.findViewById(idField.id), field.get(data), field.getAnnotation(DataBind.class));
+                    DataBind dataBind = field.getAnnotation(DataBind.class);
+                    setViewValue(finder.findViewById(idField.id), field.get(data), IBindBuilder.create(dataBind));
                 }
                 i++;
             } while (isNotObject(clazz));
@@ -144,7 +134,7 @@ public class AVKit {
                     field.setAccessible(true);
                     if (idField.annoClass == DataBind.class) {
                         DataBind dataBind = field.getAnnotation(DataBind.class);
-                        setViewValue(finder.findViewById(idField.id), field.get(data), dataBind);
+                        setViewValue(finder.findViewById(idField.id), field.get(data), IBindBuilder.create(dataBind));
                     } else if (idField.annoClass == Id.class) {
                         View v = finder.findViewById(idField.id);
                         setField(data, field, v);
@@ -182,7 +172,7 @@ public class AVKit {
                 DataBind dataBind = (DataBind) annotation;
                 int vid = getViewId(dataBind, finder.getContext());
                 idField = new IdField(vid, field.getName(), DataBind.class);
-                setViewValue(finder.findViewById(idField.id), field.get(data), dataBind);
+                setViewValue(finder.findViewById(idField.id), field.get(data), IBindBuilder.create(dataBind));
             } else if (annotation instanceof Id) {
                 Id id = (Id) annotation;
                 int vid = getViewId(id, finder.getContext());
@@ -208,80 +198,13 @@ public class AVKit {
         return !(clazz.getSuperclass() == Object.class || clazz.getSuperclass() == RecyclerHolder.class);
     }
 
-    @SuppressWarnings("unchecked")
-    private static <T extends View> void setViewValue(T view, Object value, DataBind dataBind) {
-        if (view == null || value == null || dataBind == null)
+    private static <T extends View> void setViewValue(T view, Object value, IBind bind) {
+        if (view == null || value == null || bind == null)
             return;
-        String p = dataBind.prefix();
-        String s = dataBind.suffix();
-        int loading = dataBind.loadingResId();
-        String loadName = dataBind.loadingResName();
-        int fail = dataBind.failResId();
-        String failName = dataBind.failResName();
-        String pattern = dataBind.pattern();
-        switch (dataBind.dataType()) {
-            case STRING:
-                TextView tv = (TextView) view;
-                if (TextUtils.isEmpty(pattern)) {
-                    tv.setText(p + value + s);
-                } else {
-                    dateFormat.applyPattern(pattern);
-                    if (value instanceof Long || value instanceof Date) {
-                        tv.setText(p + dateFormat.format(value) + s);
-                    } else if (value instanceof String) {
-                        tv.setText(p + value + s);
-                    }
-                }
-                break;
-            case HTML:
-                TextView html = (TextView) view;
-                html.setText(Html.fromHtml(p + value + s));
-                break;
-            case IMG:
-                if (value instanceof Integer) {
-                    int resId = Integer.parseInt(value.toString());
-                    if (view instanceof ImageView) {
-                        ((ImageView) view).setImageResource(resId);
-                    } else {
-                        view.setBackgroundResource(resId);
-                    }
-                } else if (value instanceof String) {
-                    if (loadImg != null) {
-                        Context context = view.getContext();
-                        if (loading == 0) {
-                            loading = context.getResources().getIdentifier(loadName, "drawable", context.getPackageName()) | context.getResources().getIdentifier(loadName, "mipmap", context.getPackageName());
-                        }
-                        if (fail == 0) {
-                            fail = context.getResources().getIdentifier(failName, "drawable", context.getPackageName()) | context.getResources().getIdentifier(failName, "mipmap", context.getPackageName());
-                        }
-                        loadImg.loadImg(view, loading, fail, p + value.toString() + s);
-                    }
-                }
-                break;
-            case CHECK:
-                if (value instanceof Boolean) {
-                    Checkable checkable = (Checkable) view;
-                    checkable.setChecked(Boolean.getBoolean(value + ""));
-                }
-                break;
-            case ADAPTER:
-                try {
-                    if (value instanceof Adapter && view instanceof AdapterView) {
-                        ((AdapterView<Adapter>) view).setAdapter((Adapter) value);
-                    } else if (value instanceof PagerAdapter && view instanceof ViewPager) {
-                        ((ViewPager) view).setAdapter((PagerAdapter) value);
-                    } else if (value instanceof RecyclerView.Adapter && view instanceof RecyclerView) {
-                        ((RecyclerView) view).setAdapter((RecyclerView.Adapter) value);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-            case NULL:
-                break;
-            default:
-                break;
-        }
+        if (bind instanceof BindImg)
+            ((BindImg) bind).setLoadImg(loadImg);
+        bind.bindView(view, value);
+        bind = null;
     }
 
     private AVKit() {

@@ -60,7 +60,6 @@ public abstract class AvAppCompatActivity<HD> extends AppCompatActivity implemen
         finder = new ViewFinder(this);
         try {
             _hd = newHD();
-            bind(this);
         } catch (Exception e) {
             e.printStackTrace();
         }

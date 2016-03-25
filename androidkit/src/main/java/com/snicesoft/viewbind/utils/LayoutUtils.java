@@ -8,6 +8,11 @@ import com.snicesoft.viewbind.base.IAv;
 public class LayoutUtils {
     public static int getLayoutId(Context context, Class<?> clazz) {
         int layoutId = 0;
+        if (context instanceof IAv) {
+            layoutId = ((IAv) context).layout();
+        }
+        if (layoutId != 0)
+            return layoutId;
         Layout layout = clazz.getAnnotation(Layout.class);
         if (layout != null) {
             layoutId = layout.value();
@@ -15,11 +20,6 @@ public class LayoutUtils {
                 layoutId = context.getResources().getIdentifier(layout.name(), "layout", context.getPackageName());
             }
         } else {
-            if (context instanceof IAv) {
-                layoutId = ((IAv) context).layout();
-            } else {
-                layoutId = 0;
-            }
             if (layoutId == 0) {
                 System.err.println("@Layout not find, or not override layout().");
             }

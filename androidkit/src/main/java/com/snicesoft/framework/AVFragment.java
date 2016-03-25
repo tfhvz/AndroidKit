@@ -56,7 +56,6 @@ public abstract class AVFragment<HD, FA extends FragmentActivity> extends Fragme
         finder = new ViewFinder(root);
         try {
             _hd = newHD();
-            bind(this);
         } catch (Exception e) {
             e.printStackTrace();
         }

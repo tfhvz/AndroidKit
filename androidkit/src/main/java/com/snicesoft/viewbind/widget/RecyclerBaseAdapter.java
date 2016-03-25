@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by zhuzhe on 15/9/24.
  */
-public class RecyclerBaseAdapter<VH extends RecyclerHolder, D> extends RecyclerView.Adapter<VH> {
+public abstract class RecyclerBaseAdapter<VH extends RecyclerHolder, D> extends RecyclerView.Adapter<VH> {
     protected int resource;
     private List<D> dataList;
 
@@ -112,9 +112,7 @@ public class RecyclerBaseAdapter<VH extends RecyclerHolder, D> extends RecyclerV
         return ListUtils.getSize(this.dataList);
     }
 
-    public void bindHolder(VH holder, D data, int position) {
-
-    }
+    public abstract void bindHolder(VH holder, D data, int position);
 
     VH newHolder(View view) throws Exception {
         Class vClass = $Gson$Types.getRawType(getType(0));

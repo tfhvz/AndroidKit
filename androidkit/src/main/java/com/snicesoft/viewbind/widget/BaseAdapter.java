@@ -14,9 +14,9 @@ import java.util.Collection;
 import java.util.List;
 
 @SuppressWarnings("rawtypes")
-abstract class BaseAdapter<D> extends android.widget.BaseAdapter {
+public abstract class BaseAdapter<D> extends android.widget.BaseAdapter {
     private Context context;
-    protected int resource;
+    private int resource;
     private List<D> dataList = new ArrayList<D>();
 
     public BaseAdapter(Context context) {
@@ -141,7 +141,9 @@ abstract class BaseAdapter<D> extends android.widget.BaseAdapter {
         }
     }
 
-    abstract View newView(int position);
+    View newView(int position) {
+        return View.inflate(getContext(), resource, null);
+    }
 
     @Override
     public long getItemId(int position) {

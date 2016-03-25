@@ -9,13 +9,7 @@ public abstract class MultViewAdapter<D> extends BaseAdapter<D> {
         super(context);
     }
 
-    public MultViewAdapter(Context context, int layoutRes) {
-        super(context, layoutRes);
-    }
-
     public abstract int getItemViewType(int position);
-
-    public abstract int getViewTypeCount();
 
     @Override
     View newView(int position) {

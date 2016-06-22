@@ -69,9 +69,12 @@ public class UILBitmapKit extends BitmapKit {
     public <V extends View> void display(V v, String url, BitmapConfig config) {
         if (v instanceof ImageView) {
             DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder();
-            builder.showImageOnLoading(v.getContext().getResources().getDrawable(config.getLoadingRes()));// 设置图片在下载期间显示的图片
-            builder.showImageForEmptyUri(v.getContext().getResources().getDrawable(config.getFailRes()));// 设置图片Uri为空或是错误的时候显示的图片
-            builder.showImageOnFail(v.getContext().getResources().getDrawable(config.getFailRes()));// 设置图片加载/解码过程中错误时候显示的图片
+            if (config.getLoadingRes() != 0)
+                builder.showImageOnLoading(v.getContext().getResources().getDrawable(config.getLoadingRes()));// 设置图片在下载期间显示的图片
+            if (config.getFailRes() != 0)
+                builder.showImageForEmptyUri(v.getContext().getResources().getDrawable(config.getFailRes()));// 设置图片Uri为空或是错误的时候显示的图片
+            if (config.getFailRes() != 0)
+                builder.showImageOnFail(v.getContext().getResources().getDrawable(config.getFailRes()));// 设置图片加载/解码过程中错误时候显示的图片
             builder.displayer(new RoundedBitmapDisplayer(20));
             builder.bitmapConfig(Bitmap.Config.RGB_565);
             imageLoader.displayImage(url, (ImageView) v, builder.build());

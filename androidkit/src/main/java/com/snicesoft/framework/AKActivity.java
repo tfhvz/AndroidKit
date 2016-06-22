@@ -51,6 +51,11 @@ public abstract class AKActivity<HD> extends AvAppCompatActivity<HD> {
     }
 
     @Override
+    public boolean isProxy() {
+        return false;
+    }
+
+    @Override
     public void onClick(View v) {
         super.onClick(v);
         if (curFragment != null && isClickFragment()) {

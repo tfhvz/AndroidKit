@@ -8,10 +8,4 @@ public interface IAv {
 
     void bind(Object holder);
 
-    int layout();
-
-    void onLoaded();
-
-    void loadNetData();
-
 }

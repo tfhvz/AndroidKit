@@ -2,7 +2,7 @@ package com.snicesoft.androidkit;
 
 import android.app.Application;
 
-import com.snicesoft.androidkit.otherkit.bitmap.UILBitmapKit;
+import com.snicesoft.androidkit.otherkit.bitmap.GlideBitmapKit;
 import com.snicesoft.basekit.LogKit;
 
 /**
@@ -20,8 +20,9 @@ public class KitApplication extends Application {
         //bitmap组件之VolleyImageLoader
         //VolleyImageLoader.init(getApplicationContext());
         //bitmap组件之universal-image-loader
-        UILBitmapKit.getInstance(getApplicationContext());
+//        UILBitmapKit.getInstance(getApplicationContext());
 
+        GlideBitmapKit.getInstance(getApplicationContext());
         //======初始化Http组件======
 
         //1:http组件之volley

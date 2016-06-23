@@ -113,6 +113,74 @@ public class OkhttpKit extends HttpKit {
         send(request, ok, callBack);
     }
 
+    @Override
+    public <T> T get(HttpRequest request, Class<T> clazz) {
+        request.setFullUrl();
+        Request ok = new Request.Builder().url(request.getUrl()).build();
+        return send(request, ok, clazz);
+    }
+
+    @Override
+    public <T> T post(HttpRequest request, Class<T> clazz) {
+        FormBody.Builder builder = new FormBody.Builder();
+        for (String key : request.getParams().keySet()) {
+            builder.add(key, request.getParams().get(key));
+        }
+        Request ok = new Request.Builder().url(request.getUrl()).post(builder.build()).build();
+        return send(request, ok, clazz);
+    }
+
+    @Override
+    public <T> T put(HttpRequest request, Class<T> clazz) {
+        FormBody.Builder builder = new FormBody.Builder();
+        for (String key : request.getParams().keySet()) {
+            builder.add(key, request.getParams().get(key));
+        }
+        Request ok = new Request.Builder().url(request.getUrl()).put(builder.build()).build();
+        return send(request, ok, clazz);
+    }
+
+    @Override
+    public <T> T delete(HttpRequest request, Class<T> clazz) {
+        request.setFullUrl();
+        Request ok = new Request.Builder().url(request.getUrl()).delete().build();
+        return send(request, ok, clazz);
+    }
+
+    @Override
+    public <T> T postFile(HttpRequest request, Class<T> clazz) {
+        MediaType MEDIA_TYPE = MediaType.parse("application/x-www-form-urlencoded; charset=utf-8");
+        MultipartBody.Builder builder = new MultipartBody.Builder();
+        for (String key : request.getParams().keySet()) {
+            builder.addFormDataPart(key, request.getParams().get(key));
+        }
+        for (String key : request.getFiles().keySet()) {
+            File file = request.getFiles().get(key);
+            builder.addFormDataPart(key, file.getName(), RequestBody.create(MEDIA_TYPE, file));
+        }
+        Request ok = new Request.Builder().url(request.getUrl()).post(builder.build()).build();
+        return send(request, ok, clazz);
+    }
+
+    @Override
+    public <T> T postJSON(HttpRequest request, Class<T> clazz) {
+        RequestBody body = RequestBody.create(MediaType.parse(ContentType.JSON), request.getJson());
+        Request ok = new Request.Builder().url(request.getUrl()).post(body).build();
+        return send(request, ok, clazz);
+    }
+
+    private <T> T send(HttpRequest request, Request ok, Class<T> clazz) {
+        Call call = client.newCall(ok);
+        requestMap.put(request, call);
+        String json = "";
+        try {
+            json = call.execute().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return mGson.fromJson(json, clazz);
+    }
+
     private void send(HttpRequest request, Request ok, final HttpCallBack callBack) {
         startTimeout(request, callBack);
         Call call = client.newCall(ok);

@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.List;
 
 @SuppressWarnings("rawtypes")
-public abstract class BaseAdapter<D> extends android.widget.BaseAdapter {
+public class BaseAdapter<D> extends android.widget.BaseAdapter {
     private Context context;
     private int resource;
     private List<D> dataList = new ArrayList<D>();
@@ -115,7 +115,8 @@ public abstract class BaseAdapter<D> extends android.widget.BaseAdapter {
         return convertView;
     }
 
-    protected abstract void dataBind(int position, D data, ViewFinder holder);
+    public void dataBind(int position, D data, ViewFinder holder) {
+    }
 
     private AbsListView absListView;
 

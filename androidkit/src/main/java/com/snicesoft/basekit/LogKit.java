@@ -19,6 +19,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.snicesoft.basekit.gson.GsonUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,7 +40,7 @@ public class LogKit {
     private LogKit() {
     }
 
-    private static Gson gson = new Gson();
+    private static Gson gson = GsonUtils.getGson();
     public static boolean allowD = true;
     public static boolean allowE = true;
     public static boolean allowI = true;
@@ -179,6 +180,16 @@ public class LogKit {
     private final static String END = "╚═══════════════════════════════════════════════════════════════════════════════════════";
 
     private static void printJSON(String tag, String msg) {
+        String message = formatJSON(msg);
+        Log.d(tag, START);
+        String[] lines = message.split(LINE_SEPARATOR);
+        for (String line : lines) {
+            Log.d(tag, "║ " + line);
+        }
+        Log.d(tag, END);
+    }
+
+    public static String formatJSON(String msg) {
         String message = "";
         try {
             if (msg.startsWith("{")) {
@@ -193,11 +204,6 @@ public class LogKit {
         } catch (JSONException e) {
             message = msg;
         }
-        Log.d(tag, START);
-        String[] lines = message.split(LINE_SEPARATOR);
-        for (String line : lines) {
-            Log.d(tag, "║ " + line);
-        }
-        Log.d(tag, END);
+        return message;
     }
 }

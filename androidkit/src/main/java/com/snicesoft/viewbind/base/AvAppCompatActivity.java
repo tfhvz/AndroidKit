@@ -11,14 +11,13 @@ import com.google.gson.internal.$Gson$Types;
 import com.snicesoft.framework.AVFragment;
 import com.snicesoft.viewbind.AVKit;
 import com.snicesoft.viewbind.ViewFinder;
-import com.snicesoft.viewbind.utils.LayoutUtils;
 
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
- * FragmentActivity基类
+ * AppCompatActivity基类
  *
  * @param <HD>
  * @author zhe
@@ -49,23 +48,14 @@ public abstract class AvAppCompatActivity<HD> extends AppCompatActivity implemen
     }
 
     @Override
-    public int layout() {
-        return 0;
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(LayoutUtils.getLayoutId(this, getThisClass()));
         finder = new ViewFinder(this);
         try {
             _hd = newHD();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        bindAll();
-        onLoaded();
-        loadNetData();
     }
 
     protected final Fragment findFragmentById(int id) {
@@ -78,11 +68,13 @@ public abstract class AvAppCompatActivity<HD> extends AppCompatActivity implemen
 
     protected final Class<?> getThisClass() {
         Class<?> clazz = getClass();
-        if (Proxy.PROXY_ACTIVITY.equals(clazz.getName())) {
+        if (Proxy.PROXY_ACTIVITY.equals(clazz.getName()) || isProxy()) {
             clazz = getClass().getSuperclass();
         }
         return clazz;
     }
+
+    public abstract boolean isProxy();
 
     HD newHD() throws Exception {
         Type type = getType(0);

@@ -22,6 +22,18 @@ interface IHttpKit {
 
     public void postJSON(HttpRequest request, HttpCallBack callBack);
 
+    public <T> T get(HttpRequest request, Class<T> clazz);
+
+    public <T> T post(HttpRequest request, Class<T> clazz);
+
+    public <T> T put(HttpRequest request, Class<T> clazz);
+
+    public <T> T delete(HttpRequest request, Class<T> clazz);
+
+    public <T> T postFile(HttpRequest request, Class<T> clazz);
+
+    public <T> T postJSON(HttpRequest request, Class<T> clazz);
+
     public void cancel(HttpRequest request);
 
     public void cancelAll();

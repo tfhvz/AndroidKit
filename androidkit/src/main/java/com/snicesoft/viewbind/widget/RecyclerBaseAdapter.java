@@ -1,5 +1,6 @@
 package com.snicesoft.viewbind.widget;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,9 @@ import java.util.List;
 public abstract class RecyclerBaseAdapter<VH extends RecyclerHolder, D> extends RecyclerView.Adapter<VH> {
     protected int resource;
     private List<D> dataList;
+
+    public RecyclerBaseAdapter() {
+    }
 
     public RecyclerBaseAdapter(int layoutRes) {
         this.dataList = new ArrayList<D>();
@@ -79,13 +83,17 @@ public abstract class RecyclerBaseAdapter<VH extends RecyclerHolder, D> extends 
 
     @Override
     public final VH onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = View.inflate(parent.getContext(), resource, null);
+        View view = newView(parent.getContext(), viewType);
         try {
             return newHolder(view);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    View newView(Context context, int viewType) {
+        return View.inflate(context, resource, null);
     }
 
     public final D getItem(int position) {

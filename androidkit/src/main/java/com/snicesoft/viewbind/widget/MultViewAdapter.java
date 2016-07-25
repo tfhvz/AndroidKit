@@ -9,10 +9,10 @@ public abstract class MultViewAdapter<D> extends BaseAdapter<D> {
         super(context);
     }
 
-    public abstract int getItemViewType(int position);
+    public abstract int getItemViewLayout(int viewType);
 
     @Override
     View newView(int position) {
-        return View.inflate(getContext(), getItemViewType(position), null);
+        return View.inflate(getContext(), getItemViewLayout(getItemViewType(position)), null);
     }
 }

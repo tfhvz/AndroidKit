@@ -1,13 +1,12 @@
 package com.snicesoft.androidkit;
 
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
 import com.snicesoft.androidkit.android.R;
 import com.snicesoft.basekit.LogKit;
 import com.snicesoft.framework.AKActivity;
-import com.snicesoft.net.controller.TestController;
-import com.snicesoft.viewbind.annotation.Context;
 import com.snicesoft.viewbind.annotation.DataBind;
 import com.snicesoft.viewbind.annotation.Id;
 import com.snicesoft.viewbind.annotation.Layout;
@@ -15,16 +14,6 @@ import com.snicesoft.viewbind.bind.DataType;
 
 @Layout(name = "activity_main")
 public class MainActivity extends AKActivity<MainActivity.Data> {
-
-    @Override
-    public void onLoaded() {
-        LogKit.d("==onLoaded");
-    }
-
-    @Override
-    public void loadNetData() {
-        LogKit.d("==NetData");
-    }
 
     public class Data {
         @Id(name = "btnPlugin")
@@ -39,8 +28,11 @@ public class MainActivity extends AKActivity<MainActivity.Data> {
         int progress = 30;
     }
 
-    @Context
-    TestController testController;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        bindAll();
+    }
 
     @Override
     public void onClick(View v) {

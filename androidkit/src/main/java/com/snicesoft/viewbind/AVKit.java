@@ -8,6 +8,7 @@ import com.snicesoft.basekit.BitmapKit;
 import com.snicesoft.basekit.bitmap.BitmapConfig;
 import com.snicesoft.basekit.util.ListUtils;
 import com.snicesoft.viewbind.annotation.DataBind;
+import com.snicesoft.viewbind.annotation.Id;
 import com.snicesoft.viewbind.bind.BindImg;
 import com.snicesoft.viewbind.bind.IBind;
 import com.snicesoft.viewbind.bind.IBindBuilder;
@@ -98,6 +99,17 @@ public class AVKit {
         }
     }
 
+    private static int getViewId(Id id, Context context) {
+        int vid = 0;
+        if (id != null) {
+            vid = id.value();
+            if (vid == 0) {
+                vid = context.getResources().getIdentifier(id.name(), "id", context.getPackageName());
+            }
+        }
+        return vid;
+    }
+
     private static int getViewId(DataBind dataBind, Context context) {
         int vid = 0;
         if (dataBind != null) {
@@ -123,6 +135,9 @@ public class AVKit {
                     if (idField.annoClass == DataBind.class) {
                         DataBind dataBind = field.getAnnotation(DataBind.class);
                         setViewValue(finder.findViewById(idField.id), field.get(data), IBindBuilder.create(dataBind));
+                    } else if (idField.annoClass == Id.class) {
+                        View v = finder.findViewById(idField.id);
+                        setField(data, field, v);
                     } else if (idField.annoClass == com.snicesoft.viewbind.annotation.Context.class) {
                         AutoUtils.loadContext(finder.getContext(), field, data);
                     }
@@ -158,6 +173,11 @@ public class AVKit {
                 int vid = getViewId(dataBind, finder.getContext());
                 idField = new IdField(vid, field.getName(), DataBind.class);
                 setViewValue(finder.findViewById(idField.id), field.get(data), IBindBuilder.create(dataBind));
+            } else if (annotation instanceof Id) {
+                Id id = (Id) annotation;
+                int vid = getViewId(id, finder.getContext());
+                idField = new IdField(vid, field.getName(), Id.class);
+                setField(data, field, finder.findViewById(vid));
             } else if (annotation instanceof com.snicesoft.viewbind.annotation.Context) {
                 idField = new IdField(0, field.getName(), com.snicesoft.viewbind.annotation.Context.class);
                 AutoUtils.loadContext(finder.getContext(), field, data);

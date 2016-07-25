@@ -11,6 +11,7 @@ import com.google.gson.internal.$Gson$Types;
 import com.snicesoft.framework.AVFragment;
 import com.snicesoft.viewbind.AVKit;
 import com.snicesoft.viewbind.ViewFinder;
+import com.snicesoft.viewbind.utils.LayoutUtils;
 
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -50,6 +51,9 @@ public abstract class AvAppCompatActivity<HD> extends AppCompatActivity implemen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        int layout = LayoutUtils.getLayoutId(this, getThisClass());
+        if (layout != 0)
+            setContentView(layout);
         finder = new ViewFinder(this);
         try {
             _hd = newHD();

@@ -103,6 +103,16 @@ public class PluginPackageManager extends PackageManager {
 	}
 
 	@Override
+	public int[] getPackageGids(String s, int i) throws NameNotFoundException {
+		return new int[0];
+	}
+
+	@Override
+	public int getPackageUid(String s, int i) throws NameNotFoundException {
+		return 0;
+	}
+
+	@Override
 	public PermissionInfo getPermissionInfo(String name, int flags)
 			throws NameNotFoundException {
 		// TODO
@@ -211,6 +221,11 @@ public class PluginPackageManager extends PackageManager {
 	}
 
 	@Override
+	public boolean isPermissionRevokedByPolicy(String s, String s1) {
+		return false;
+	}
+
+	@Override
 	public boolean addPermission(PermissionInfo info) {
 		// TODO addPermission
 		return orig.addPermission(info);
@@ -273,6 +288,11 @@ public class PluginPackageManager extends PackageManager {
 	public boolean hasSystemFeature(String name) {
 		// TODO hasSystemFeature
 		return orig.hasSystemFeature(name);
+	}
+
+	@Override
+	public boolean hasSystemFeature(String s, int i) {
+		return false;
 	}
 
 	@Override

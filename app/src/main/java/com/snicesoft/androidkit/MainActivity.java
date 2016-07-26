@@ -8,10 +8,8 @@ import com.snicesoft.basekit.LogKit;
 import com.snicesoft.framework.AKActivity;
 import com.snicesoft.viewbind.annotation.DataBind;
 import com.snicesoft.viewbind.annotation.Id;
-import com.snicesoft.viewbind.annotation.Layout;
 import com.snicesoft.viewbind.bind.DataType;
 
-@Layout(name = "activity_main")
 public class MainActivity extends AKActivity<MainActivity.Data> {
 
     public class Data {
@@ -25,6 +23,11 @@ public class MainActivity extends AKActivity<MainActivity.Data> {
         float rating = 3;
         @DataBind(name = "seekBar", dataType = DataType.PROGRESS)
         int progress = 30;
+    }
+
+    @Override
+    public int layout() {
+        return R.layout.activity_main;
     }
 
     @Override

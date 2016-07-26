@@ -2,6 +2,7 @@ package com.snicesoft.viewbind.base;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -56,9 +57,14 @@ public abstract class AvAppCompatActivity<HD> extends AppCompatActivity implemen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int layout = LayoutUtils.getLayoutId(this, getThisClass());
+        int layout = LayoutUtils.getLayoutId(this, this, getThisClass());
         if (layout != 0)
             setContentView(layout);
+    }
+
+    @Override
+    public void setContentView(@LayoutRes int layoutResID) {
+        super.setContentView(layoutResID);
         finder = new ViewFinder(this);
         try {
             _hd = newHD();

@@ -1,6 +1,7 @@
 package com.snicesoft.framework;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -43,27 +44,37 @@ public abstract class AVFragment<HD, FA extends FragmentActivity> extends Fragme
     }
 
     @Override
+    public int layout() {
+        return 0;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         int layout = layout();
-        if (layout == 0)
-            layout = LayoutUtils.getLayoutId(fa(), getClass());
-        View root = inflater.inflate(layout, null);
-        finder = new ViewFinder(root);
-        try {
-            _hd = newHD();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (layout != 0)
+            return inflater.inflate(layout, null);
+        layout = LayoutUtils.getLayoutId(fa(), this, getClass());
+        if (layout != 0)
+            return inflater.inflate(layout, null);
+        return null;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (view != null) {
+            finder = new ViewFinder(view);
+            try {
+                _hd = newHD();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            bindAll();
         }
-        bindAll();
-        return root;
     }
 
     public ViewFinder getFinder() {
         return finder;
-    }
-
-    protected View getRoot() {
-        return finder.getParent();
     }
 
     HD newHD() throws Exception {

@@ -6,11 +6,8 @@ import com.snicesoft.viewbind.annotation.Layout;
 import com.snicesoft.viewbind.base.IAv;
 
 public class LayoutUtils {
-    public static int getLayoutId(Context context, Class<?> clazz) {
-        int layoutId = 0;
-        if (context instanceof IAv) {
-            layoutId = ((IAv) context).layout();
-        }
+    public static int getLayoutId(Context context, IAv av, Class<?> clazz) {
+        int layoutId = av.layout();
         if (layoutId != 0)
             return layoutId;
         Layout layout = clazz.getAnnotation(Layout.class);

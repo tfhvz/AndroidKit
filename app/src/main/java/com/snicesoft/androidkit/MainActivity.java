@@ -17,8 +17,8 @@ public class MainActivity extends AKActivity<MainActivity.Data> {
         Button btnPlugin;
         @DataBind(name = "btnPlugin")
         String name = "zenme是大写";
-        @DataBind(dataType = DataType.IMG, name = "imageView", failResName = "ic_launcher")
-        String img = "http://h.hiphotos.baidu.com/zhidao/pic/item/eac4b74543a9822628850ccc8c82b9014b90eb91.jpg";
+//        @DataBind(dataType = DataType.IMG, name = "imageView", failResName = "ic_launcher")
+//        String img = "http://h.hiphotos.baidu.com/zhidao/pic/item/eac4b74543a9822628850ccc8c82b9014b90eb91.jpg";
         @DataBind(name = "ratingBar", dataType = DataType.RATING)
         float rating = 3;
         @DataBind(name = "seekBar", dataType = DataType.PROGRESS)
@@ -38,6 +38,7 @@ public class MainActivity extends AKActivity<MainActivity.Data> {
                 _hd.name = "dsfdsf";
                 bindTo(R.id.btnPlugin);
                 LogKit.d("==hd:" + _hd.btnPlugin);
+                openFragment(R.id.content, new TestFragment());
 //                HttpRequest request = new HttpRequest("http://192.168.10.161:8080/web-weiding/charityRecord/love");
 ////                request.addFile("file", new File("/storage/sdcard0/DCIM/Camera/IMG_20151110_164815.jpg"));
 //                HttpKit.getInstance().get(request, new HttpCallBack<Result<String>>() {

@@ -31,6 +31,9 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:24.0.0'
+    compile 'com.android.support:recyclerview-v7:24.0.0'
+    compile 'com.android.support:support-v4:24.0.0'
     compile project(':androidkit')
     compile project(':pluginkit')
     provided "org.projectlombok:lombok:1.16.10"

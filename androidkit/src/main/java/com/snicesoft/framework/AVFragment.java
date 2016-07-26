@@ -1,15 +1,17 @@
 package com.snicesoft.framework;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.gson.internal.$Gson$Types;
 import com.snicesoft.viewbind.AVKit;
 import com.snicesoft.viewbind.ViewFinder;
 import com.snicesoft.viewbind.base.IAv;
+import com.snicesoft.viewbind.utils.LayoutUtils;
 
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -41,14 +43,19 @@ public abstract class AVFragment<HD, FA extends FragmentActivity> extends Fragme
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        finder = new ViewFinder(getView());
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        int layout = layout();
+        if (layout == 0)
+            layout = LayoutUtils.getLayoutId(fa(), getClass());
+        View root = inflater.inflate(layout, null);
+        finder = new ViewFinder(root);
         try {
             _hd = newHD();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        bindAll();
+        return root;
     }
 
     public ViewFinder getFinder() {

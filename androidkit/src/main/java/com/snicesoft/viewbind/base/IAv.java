@@ -8,4 +8,5 @@ public interface IAv {
 
     void bind(Object holder);
 
+    int layout();
 }

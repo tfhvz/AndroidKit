@@ -1,6 +1,5 @@
 package com.snicesoft.androidkit;
 
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
@@ -26,12 +25,6 @@ public class MainActivity extends AKActivity<MainActivity.Data> {
         float rating = 3;
         @DataBind(name = "seekBar", dataType = DataType.PROGRESS)
         int progress = 30;
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        bindAll();
     }
 
     @Override

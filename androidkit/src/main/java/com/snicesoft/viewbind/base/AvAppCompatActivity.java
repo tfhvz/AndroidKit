@@ -49,6 +49,11 @@ public abstract class AvAppCompatActivity<HD> extends AppCompatActivity implemen
     }
 
     @Override
+    public int layout() {
+        return 0;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         int layout = LayoutUtils.getLayoutId(this, getThisClass());
@@ -60,6 +65,7 @@ public abstract class AvAppCompatActivity<HD> extends AppCompatActivity implemen
         } catch (Exception e) {
             e.printStackTrace();
         }
+        bindAll();
     }
 
     protected final Fragment findFragmentById(int id) {
